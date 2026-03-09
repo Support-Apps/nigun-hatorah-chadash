@@ -1564,20 +1564,27 @@
             const verses = text.split('׃');
             const cleaned = [];
 
+            // טווח ניקוד (05B0-05BD) — מילים אמיתיות תמיד יש להן ניקוד
+            const niqqudRegex = /[\u05B0-\u05BD]/;
+
             for (let v of verses) {
                 v = v.trim();
                 if (!v) continue;
 
-                // שלב 2: מסירים מספר פסוק בתחילת הפסוק
-                // מספר פסוק = אות/אותיות עבריות ללא ניקוד (1-3 אותיות) ואחריהן רווח
-                // למשל: "א בראשית" → "בראשית" | "כו ויאמר" → "ויאמר"
-                // זה עובד כי מילים אמיתיות תמיד יש להן ניקוד/טעם צמוד (לא רווח)
-                v = v.replace(/^([א-ת]{1,3})\s+/, '');
+                // שלב 2: מחפשים את ה"מילה" הראשונה (לפני רווח ראשון)
+                const spaceIdx = v.search(/\s/);
+                if (spaceIdx > 0) {
+                    const firstWord = v.substring(0, spaceIdx);
+                    // אם אין ניקוד במילה הראשונה — זה מספר פסוק, מוחקים
+                    if (!niqqudRegex.test(firstWord)) {
+                        v = v.substring(spaceIdx).trim();
+                    }
+                }
 
                 cleaned.push(v.trim());
             }
 
-            // שלב 3: מחזירים עם ׃ בין הפסוקים, כל פסוק בשורה
+            // שלב 3: מחזירים עם ׃ בין הפסוקים
             return cleaned.join(' ׃\n');
         }
 
