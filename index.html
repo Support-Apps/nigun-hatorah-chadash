@@ -1560,8 +1560,8 @@
         // עיבוד מקדים: פסוק בשורה + הסרת מספרי פסוקים
         // ========================================
         function preprocessText(text) {
-            // שלב 1: מפצלים לפי סוף פסוק (׃)
-            const verses = text.split('׃');
+            // שלב 1: מפצלים לפי סוף פסוק — גם ׃ (U+05C3) וגם : (נקודתיים רגילות)
+            const verses = text.split(/[׃:]/);
             const cleaned = [];
 
             // טווח ניקוד (05B0-05BD) — מילים אמיתיות תמיד יש להן ניקוד
@@ -1635,8 +1635,8 @@
                     });
                     
                     i = j;
-                } else if (char === ' ' || char === '\n' || char === '׃') {
-                    notes.push({ type: 'rest', restType: char === '׃' ? 'verse' : 'space' });
+                } else if (char === ' ' || char === '\n' || char === '׃' || char === ':') {
+                    notes.push({ type: 'rest', restType: char === '׃' || char === ':' ? 'verse' : 'space' });
                     i++;
                 } else {
                     i++;
@@ -1715,8 +1715,8 @@
                     });
 
                     i = j;
-                } else if (char === ' ' || char === '\n' || char === '׃') {
-                    notes.push({ type: 'rest', restType: char === '׃' ? 'verse' : 'space' });
+                } else if (char === ' ' || char === '\n' || char === '׃' || char === ':') {
+                    notes.push({ type: 'rest', restType: char === '׃' || char === ':' ? 'verse' : 'space' });
                     i++;
                 } else {
                     i++;
