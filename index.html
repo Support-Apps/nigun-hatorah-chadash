@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>בס"ד | 🎵 ניגון התורה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Bellefair&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Frank+Ruhl+Libre:wght@300;400;500;700&family=Suez+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --baby-pink: #ffe4ec;
+            --baby-pink-light: #fff5f7;
+            --pink-text: #FC94AF;
+            --pink-dark: #e07a95;
+            --white: #ffffff;
+            --gold: #d4a574;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Frank Ruhl Libre', serif;
+            background: var(--baby-pink-light);
+            min-height: 100vh;
+            color: var(--pink-text);
+        }
+
+        .bsd { text-align: right; font-size: 1.1rem; color: var(--pink-dark); padding: 10px 15px 0; font-weight: bold; }
+        .container { max-width: 100%; padding: 15px; }
+        header { text-align: center; padding: 20px 15px 15px; }
+
+        .logo {
+            font-family: 'Amatic SC', cursive;
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 700;
+            color: var(--pink-text);
+        }
+
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: var(--pink-dark);
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .divider {
+            width: 80%; max-width: 300px; height: 2px;
+            background: var(--pink-text);
+            margin: 15px auto;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 25px;
+            border: 2px solid var(--pink-text);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'Suez One', serif;
+            font-size: clamp(1.1rem, 4vw, 1.4rem);
+            color: var(--pink-text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--baby-pink);
+        }
+
+        .text-input {
+            width: 100%; height: 120px;
+            border: 2px solid var(--pink-text);
+            border-radius: 15px;
+            padding: 15px;
+            font-family: 'Frank Ruhl Libre', serif;
+            font-size: 1.2rem;
+            color: var(--pink-dark);
+            resize: none;
+            direction: rtl;
+            background: var(--white);
+        }
+
+        .text-input:focus { outline: none; border-color: var(--pink-dark); }
+
+        .output-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) { .output-container { grid-template-columns: 1fr; } }
+
+        .output-box {
+            background: var(--baby-pink-light);
+            border: 2px solid var(--pink-text);
+            border-radius: 15px;
+            padding: 15px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .output-box h4 {
+            color: var(--pink-dark);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .copy-btn {
+            background: var(--pink-text);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .output-content {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            color: var(--pink-dark);
+        }
+
+        .output-content.ltr { direction: ltr; text-align: left; }
+
+        /* Piano */
+        .piano-wrapper {
+            background: linear-gradient(180deg, #2d1f2f 0%, #1a0f1a 100%);
+            border-radius: 20px;
+            padding: 15px 15px 20px;
+            border: 3px solid var(--pink-dark);
+            overflow: hidden;
+            direction: ltr;
+        }
+
+        .piano-scroll { overflow-x: auto; padding-bottom: 10px; direction: ltr; display: flex; justify-content: center; }
+
+        .piano-keys {
+            display: flex;
+            height: 130px;
+            position: relative;
+            min-width: fit-content;
+            direction: ltr;
+            margin: 0 auto;
+        }
+
+        .white-key {
+            width: 32px; min-width: 32px; height: 130px;
+            background: linear-gradient(180deg, #fffff8 0%, #f8f8f0 85%, #d8d8d0 100%);
+            border: 1px solid #bbb;
+            border-radius: 0 0 6px 6px;
+            margin: 0 1px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .white-key:first-child { border-radius: 6px 0 6px 6px; }
+        .white-key:last-child { border-radius: 0 6px 6px 6px; }
+
+        .white-key.active {
+            background: linear-gradient(180deg, var(--baby-pink) 0%, var(--pink-text) 100%);
+            transform: translateY(3px);
+        }
+
+        .black-key {
+            width: 20px; min-width: 20px; height: 80px;
+            background: linear-gradient(180deg, #333 0%, #0a0a0a 100%);
+            border-radius: 0 0 4px 4px;
+            position: absolute;
+            top: 0;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .black-key.active {
+            background: linear-gradient(180deg, var(--pink-dark) 0%, #8b4560 100%);
+            transform: translateY(2px);
+        }
+
+        .note-label {
+            position: absolute;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.5rem;
+            color: var(--pink-dark);
+        }
+
+        .piano-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .piano-play-btn {
+            background: var(--pink-text);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Instruments */
+        .instrument-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .instrument-btn {
+            padding: 10px 6px;
+            background: var(--baby-pink-light);
+            border: 2px solid var(--pink-text);
+            border-radius: 12px;
+            color: var(--pink-text);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+        }
+
+        .instrument-btn.active { background: var(--pink-text); color: var(--white); }
+        .instrument-btn .emoji { font-size: 1.5rem; }
+        .instrument-btn .name { font-size: 0.7rem; }
+        .instrument-btn.full-width { grid-column: span 3; }
+
+        .instrument-btn.has-soundfont::after {
+            content: '✓';
+            position: absolute; top: 3px; left: 3px;
+            background: #4CAF50; color: white;
+            width: 16px; height: 16px; border-radius: 50%;
+            font-size: 10px; display: flex; align-items: center; justify-content: center;
+        }
+
+        .instrument-btn .sf-name { font-size: 0.55rem; color: #4CAF50; }
+
+        .load-sf-btn {
+            position: absolute; top: 3px; right: 3px;
+            background: var(--pink-dark); color: white; border: none;
+            width: 20px; height: 20px; border-radius: 50%;
+            font-size: 12px; cursor: pointer;
+        }
+
+        .sf-file-input { display: none; }
+        .sf-status { font-size: 0.8rem; color: var(--pink-dark); text-align: center; margin-top: 10px; }
+
+        /* Controls */
+        .controls-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-top: 12px;
+        }
+
+        .control-group {
+            background: var(--baby-pink-light);
+            border-radius: 10px; padding: 10px;
+            border: 1px solid var(--pink-text);
+        }
+
+        .control-label {
+            display: flex; justify-content: space-between;
+            margin-bottom: 6px; font-size: 0.8rem; color: var(--pink-text);
+        }
+
+        .control-value {
+            background: var(--pink-text); color: var(--white);
+            padding: 2px 8px; border-radius: 15px; font-size: 0.75rem;
+        }
+
+        input[type="range"] {
+            width: 100%; height: 6px;
+            -webkit-appearance: none;
+            background: var(--baby-pink); border-radius: 3px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px; height: 18px;
+            background: var(--pink-text); border-radius: 50%; cursor: pointer;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 10px; margin-top: 12px;
+        }
+
+        .btn {
+            padding: 12px 15px; border: none; border-radius: 12px;
+            font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        .btn-primary { background: var(--pink-text); color: var(--white); border: 2px solid var(--pink-dark); }
+        .btn-secondary { background: var(--baby-pink); color: var(--pink-dark); border: 2px solid var(--pink-text); }
+        .btn-stop { background: #e57373; color: white; }
+        .btn-full { grid-column: span 2; }
+
+        .now-playing {
+            background: var(--baby-pink); padding: 12px; border-radius: 12px;
+            text-align: center; margin-top: 12px; display: none;
+            border: 2px solid var(--pink-text);
+        }
+
+        .now-playing.visible { display: block; }
+
+        .now-playing-text {
+            font-family: 'Amatic SC', cursive;
+            font-size: 1.5rem; color: var(--pink-dark);
+        }
+
+        .info-box {
+            background: var(--baby-pink-light);
+            border: 1px solid var(--pink-text);
+            border-radius: 10px; padding: 12px;
+            font-size: 0.8rem; color: var(--pink-dark);
+        }
+
+        .info-box h4 { color: var(--pink-text); margin-bottom: 8px; }
+
+        .triplet-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.75rem; margin-top: 8px;
+        }
+
+        .triplet-table th {
+            background: var(--pink-text); color: white;
+            padding: 4px 6px; text-align: center;
+        }
+
+        .triplet-table td {
+            padding: 3px 5px; text-align: center;
+            border-bottom: 1px solid var(--baby-pink);
+        }
+
+        .triplet-table tr:nth-child(even) { background: var(--baby-pink-light); }
+
+        footer { text-align: center; padding: 20px 15px; font-size: 0.85rem; color: var(--pink-text); }
+
+        /* Taamim Display */
+        .taamim-tabs { display: flex; gap: 0; margin-bottom: 15px; }
+        .taamim-tab {
+            flex: 1; padding: 10px; text-align: center; cursor: pointer;
+            background: var(--baby-pink-light); border: 2px solid var(--pink-text);
+            font-family: 'Suez One', serif; font-size: 0.95rem; color: var(--pink-dark);
+            transition: all 0.3s;
+        }
+        .taamim-tab:first-child { border-radius: 0 12px 12px 0; border-left: 1px solid var(--pink-text); }
+        .taamim-tab:last-child { border-radius: 12px 0 0 12px; border-right: 2px solid var(--pink-text); }
+        .taamim-tab.active { background: var(--pink-text); color: white; }
+        .taamim-panel { display: none; }
+        .taamim-panel.active { display: block; }
+
+        .taamim-section-title {
+            font-family: 'Suez One', serif; font-size: 1rem; color: var(--pink-dark);
+            margin: 18px 0 10px; padding-bottom: 6px;
+            border-bottom: 2px solid var(--baby-pink); display: flex; align-items: center; gap: 8px;
+        }
+        .taamim-section-title:first-of-type { margin-top: 5px; }
+
+        .taamim-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 10px; margin-bottom: 10px;
+        }
+        .taam-card {
+            background: var(--white); border: 1.5px solid var(--baby-pink);
+            border-radius: 12px; padding: 10px 8px; text-align: center;
+            transition: all 0.25s; cursor: default;
+        }
+        .taam-card:hover { border-color: var(--pink-text); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(252,148,175,0.2); }
+        .taam-card.disjunctive { border-right: 4px solid var(--pink-text); }
+        .taam-card.conjunctive { border-right: 4px solid var(--gold); }
+
+        .taam-sample {
+            font-family: 'Frank Ruhl Libre', serif; font-size: 2.2rem;
+            line-height: 1.4; color: var(--pink-dark); direction: rtl;
+            min-height: 52px; display: flex; align-items: center; justify-content: center;
+        }
+        .taam-name {
+            font-family: 'Suez One', serif; font-size: 0.82rem;
+            color: var(--pink-text); margin-top: 4px; line-height: 1.3;
+        }
+        .taam-unicode {
+            font-family: monospace; font-size: 0.65rem;
+            color: #bbb; margin-top: 2px;
+        }
+        .taam-type-badge {
+            display: inline-block; font-size: 0.6rem; padding: 2px 6px;
+            border-radius: 8px; margin-top: 4px; font-weight: bold;
+        }
+        .taam-type-badge.disjunctive { background: #ffe4ec; color: var(--pink-dark); }
+        .taam-type-badge.conjunctive { background: #fff3e0; color: #b37a2e; }
+
+        .taamim-legend {
+            display: flex; gap: 15px; justify-content: center; margin-bottom: 15px;
+            flex-wrap: wrap; font-size: 0.8rem;
+        }
+        .taamim-legend span { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+        .legend-dot.dis { background: var(--pink-text); }
+        .legend-dot.con { background: var(--gold); }
+
+        /* Staff Notation */
+        .staff-container {
+            overflow-x: auto; padding: 10px 0; background: var(--white);
+            border: 1.5px solid var(--baby-pink); border-radius: 12px; margin-top: 12px;
+            direction: ltr;
+        }
+        .staff-container svg { display: block; min-width: 100%; }
+        .staff-toggle { display: flex; gap: 10px; margin-top: 10px; justify-content: center; flex-wrap: wrap; }
+        .staff-toggle button {
+            background: var(--baby-pink-light); border: 1.5px solid var(--pink-text);
+            color: var(--pink-dark); padding: 6px 14px; border-radius: 10px;
+            cursor: pointer; font-size: 0.8rem;
+        }
+        .staff-toggle button.active { background: var(--pink-text); color: white; }
+
+        @media (max-width: 400px) {
+            .instrument-grid { grid-template-columns: repeat(2, 1fr); }
+            .instrument-btn.full-width { grid-column: span 2; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bsd">בס"ד</div>
+    <div class="container">
+        <header>
+            <h1 class="logo">ניגון התורה</h1>
+            <p class="subtitle">תּוֹרָה = תו ״רֵה״</p>
+            <p class="subtitle">~ אות לפני · אות כתובה · אות אחרי → ניגון בסולם פרייג'יש ~</p>
+
+            <div class="divider"></div>
+        </header>
+
+        <div class="card">
+            <div class="card-title"><span class="icon">📜</span> הדביקו טקסט מקראי</div>
+            <textarea class="text-input" id="textInput" placeholder="בְּרֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃"></textarea>
+
+            <div style="margin-top:12px;">
+                <div class="taamim-tabs" style="margin-bottom:0;">
+                    <div class="taamim-tab active" onclick="setMelodyMode('letters')" data-mm="letters">🔤 ניגון מאותיות</div>
+                    <div class="taamim-tab" onclick="setMelodyMode('taamim')" data-mm="taamim">🎵 ניגון מטעמים</div>
+                </div>
+                <div id="melodyModeDesc" style="font-size:0.75rem; color:var(--pink-text); text-align:center; padding:6px; background:var(--baby-pink-light); border-radius:0 0 12px 12px;">
+                    כל אות ממופה לצליל בסולם פרייג'יש — שלשות: לפני · כתובה · אחרי
+                </div>
+            </div>
+
+            <button class="btn btn-primary btn-full" id="convertBtn" style="margin-top: 12px;">🔄 המר לניגון</button>
+
+            <div id="preprocessedBox" style="display:none; margin-top:12px; background:var(--baby-pink-light); border:1.5px solid var(--baby-pink); border-radius:12px; padding:12px;">
+                <h4 style="font-family:'Suez One',serif; font-size:0.9rem; color:var(--pink-text); margin-bottom:8px;">✅ טקסט מנוקה (ללא מספרי פסוקים)</h4>
+                <div id="preprocessedText" style="font-family:'Frank Ruhl Libre',serif; font-size:1rem; color:var(--pink-dark); direction:rtl; line-height:1.9; white-space:pre-wrap;"></div>
+            </div>
+
+            <div class="output-container" id="outputContainer" style="display: none;">
+                <div style="grid-column: 1 / -1;">
+                    <div class="taamim-tabs" style="margin-bottom:0;">
+                        <div class="taamim-tab active" onclick="switchOutputTab('word')">📝 לפי מילה</div>
+                        <div class="taamim-tab" onclick="switchOutputTab('sentence')">📜 לפי משפט</div>
+                    </div>
+                </div>
+
+                <!-- תצוגה לפי מילה -->
+                <div id="wordView" class="output-view" style="display:contents;">
+                    <div class="output-box">
+                        <h4>שלשות אותיות → תווים <button class="copy-btn" id="copyHebrewBtn">העתק</button></h4>
+                        <div class="output-content" id="hebrewOutput"></div>
+                    </div>
+                    <div class="output-box">
+                        <h4>Notes + טעמים <button class="copy-btn" id="copyEnglishBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="englishOutput"></div>
+                    </div>
+                    <div class="output-box" style="grid-column: 1 / -1;">
+                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="vpianoOutput"></div>
+                    </div>
+                </div>
+
+                <!-- תצוגה לפי משפט -->
+                <div id="sentenceView" class="output-view" style="display:none; grid-column: 1 / -1;">
+                    <div class="output-box" style="margin-bottom:15px;">
+                        <h4>שלשות לפי פסוק <button class="copy-btn" id="copySentenceHebrewBtn">העתק</button></h4>
+                        <div class="output-content" id="sentenceHebrewOutput" style="max-height:400px;"></div>
+                    </div>
+                    <div class="output-box" style="margin-bottom:15px;">
+                        <h4>Notes + טעמים לפי פסוק <button class="copy-btn" id="copySentenceEngBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="sentenceEngOutput" style="max-height:400px;"></div>
+                    </div>
+                    <div class="output-box">
+                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="sentenceVPianoOutput" style="max-height:400px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="now-playing" id="nowPlaying">
+                <div class="now-playing-text" id="nowPlayingText">♪ מנגן... ♪</div>
+            </div>
+
+            <!-- תצוגת חמשה (Staff Notation) -->
+            <div id="staffCard" style="display:none; margin-top:15px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-family:'Suez One',serif; font-size:1rem; color:var(--pink-text);">🎼 תווים על חמשה</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <button onclick="clearStaff()" style="background:#e57373; color:white; border:none; padding:5px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem;">🗑️ מחק הכל</button>
+                    </div>
+                    <div class="staff-toggle">
+                        <button class="active" onclick="setStaffNoteType('all')" data-st="all">הכל</button>
+                        <button onclick="setStaffNoteType('whole')" data-st="whole">שלם</button>
+                        <button onclick="setStaffNoteType('half')" data-st="half">חצי</button>
+                        <button onclick="setStaffNoteType('quarter')" data-st="quarter">רבע</button>
+                        <button onclick="setStaffNoteType('eighth')" data-st="eighth">שמינית</button>
+                        <button onclick="setStaffNoteType('16th')" data-st="16th">חלק ה-16</button>
+                    </div>
+                </div>
+                <div class="staff-container" id="staffContainer"></div>
+                <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:8px; font-size:0.7rem; color:var(--pink-text);">
+                    <span>𝅝 שלם</span><span>𝅗𝅥 חצי</span><span>♩ רבע</span><span>♪ שמינית</span><span>♬ חלק ה-16</span>
+                    <span style="color:var(--pink-dark);">● = התו העיקרי</span>
+                    <span style="color:#c8a0b0;">● = לפני/אחרי</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="icon">🎹</span> פסנתר פרייג'יש</div>
+            <div class="piano-wrapper">
+                <div class="piano-scroll">
+                    <div class="piano-keys" id="pianoKeys"></div>
+                </div>
+            </div>
+            <div class="piano-controls">
+                <button class="piano-play-btn" id="pianoPlayBtn">▶️ נגן פלט</button>
+                <button class="piano-play-btn" id="pianoStopBtn" style="display: none; background: #e57373;">⏹️ עצור</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span class="icon">🎻</span> כלי נגינה</div>
+            <p style="font-size: 0.75rem; color: var(--pink-dark); margin-bottom: 10px;">לחצו על ➕ כדי לטעון קובץ SF2 לכלי</p>
+            <div class="instrument-grid">
+                <button class="instrument-btn active" data-instrument="piano">
+                    <span class="load-sf-btn" data-instrument="piano">➕</span>
+                    <span class="emoji">🎹</span><span class="name">פסנתר</span>
+                    <span class="sf-name" id="sf-name-piano"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="harp">
+                    <span class="load-sf-btn" data-instrument="harp">➕</span>
+                    <span class="emoji">🎵</span><span class="name">נבל</span>
+                    <span class="sf-name" id="sf-name-harp"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="violin">
+                    <span class="load-sf-btn" data-instrument="violin">➕</span>
+                    <span class="emoji">🎻</span><span class="name">כינור</span>
+                    <span class="sf-name" id="sf-name-violin"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="strings">
+                    <span class="load-sf-btn" data-instrument="strings">➕</span>
+                    <span class="emoji">🎼</span><span class="name">מיתרים</span>
+                    <span class="sf-name" id="sf-name-strings"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="flute">
+                    <span class="load-sf-btn" data-instrument="flute">➕</span>
+                    <span class="emoji">🪈</span><span class="name">חליל</span>
+                    <span class="sf-name" id="sf-name-flute"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="choir">
+                    <span class="load-sf-btn" data-instrument="choir">➕</span>
+                    <span class="emoji">🎤</span><span class="name">מקהלה</span>
+                    <span class="sf-name" id="sf-name-choir"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="cymbals">
+                    <span class="load-sf-btn" data-instrument="cymbals">➕</span>
+                    <span class="emoji">🥁</span><span class="name">צימבלים</span>
+                    <span class="sf-name" id="sf-name-cymbals"></span>
+                </button>
+                <button class="instrument-btn" data-instrument="piano-strings">
+                    <span class="emoji">🎹🎼</span><span class="name">פסנתר + מיתרים</span>
+                </button>
+                <button class="instrument-btn" data-instrument="orchestra">
+                    <span class="emoji">🎻</span><span class="name">אורקסטרה</span>
+                </button>
+                <button class="instrument-btn" data-instrument="all">
+                    <span class="emoji">🎵</span><span class="name">הכל יחד</span>
+                </button>
+            </div>
+
+            <input type="file" id="sf-piano" class="sf-file-input" accept=".sf2" data-instrument="piano">
+            <input type="file" id="sf-harp" class="sf-file-input" accept=".sf2" data-instrument="harp">
+            <input type="file" id="sf-violin" class="sf-file-input" accept=".sf2" data-instrument="violin">
+            <input type="file" id="sf-strings" class="sf-file-input" accept=".sf2" data-instrument="strings">
+            <input type="file" id="sf-flute" class="sf-file-input" accept=".sf2" data-instrument="flute">
+            <input type="file" id="sf-choir" class="sf-file-input" accept=".sf2" data-instrument="choir">
+            <input type="file" id="sf-cymbals" class="sf-file-input" accept=".sf2" data-instrument="cymbals">
+
+            <div class="controls-row">
+                <div class="control-group">
+                    <div class="control-label"><span>⏱️ קצב</span><span class="control-value" id="tempoValue">58</span></div>
+                    <input type="range" id="tempoSlider" min="30" max="120" value="58">
+                </div>
+                <div class="control-group">
+                    <div class="control-label"><span>🔊 עוצמה</span><span class="control-value" id="volumeValue">80%</span></div>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="80">
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-top: 10px;">
+                <div class="control-label"><span>📜 סוג טעמים</span></div>
+                <div style="display: flex; gap: 10px; margin-top: 5px;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="radio" name="taamimType" value="regular" checked> תורה (חמשה חומשים)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="radio" name="taamimType" value="emet"> טעמי אמ"ת (איוב, משלי, תהלים)
+                    </label>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary btn-full" id="playBtn">▶️ נגנו</button>
+                <button class="btn btn-stop btn-full" id="stopBtn" style="display: none;">⏹️ עצרו</button>
+                <button class="btn btn-secondary" id="downloadMidiBtn">💾 MIDI</button>
+                <button class="btn btn-secondary" id="downloadXmlBtn">📄 MusicXML</button>
+                <button class="btn btn-secondary" id="downloadDocxBtn">📝 DOCX</button>
+                <button class="btn btn-secondary" id="clearBtn" onclick="clearAll()">🗑️ נקה</button>
+            </div>
+            <div class="sf-status" id="sfStatus"></div>
+        </div>
+
+        <div class="card">
+            <div class="info-box">
+                <h4>📖 מיפוי שלשות: אות לפני → אות כתובה → אות אחרי</h4>
+                <p style="margin-bottom: 6px;">כל אות בטקסט מנגנת <b>3 תווים</b> — האות שלפניה, היא עצמה, והאות שאחריה (ע"פ סדר א"ב)</p>
+                <table class="triplet-table">
+                    <tr><th>אות כתובה</th><th>לפני</th><th>כתובה</th><th>אחרי</th><th>תווים</th></tr>
+                    <tr><td>א</td><td>א</td><td>א</td><td>ב</td><td>C-C-D</td></tr>
+                    <tr><td>ב</td><td>א</td><td>ב</td><td>ג</td><td>C-D-E</td></tr>
+                    <tr><td>ג</td><td>ב</td><td>ג</td><td>ד</td><td>D-E-F</td></tr>
+                    <tr><td>ד</td><td>ג</td><td>ד</td><td>ה</td><td>E-F-G</td></tr>
+                    <tr><td>ה</td><td>ד</td><td>ה</td><td>ו</td><td>F-G-A</td></tr>
+                    <tr><td>ו</td><td>ה</td><td>ו</td><td>ז</td><td>G-A-B</td></tr>
+                    <tr><td>ז</td><td>ו</td><td>ז</td><td>ח</td><td>A-B-C</td></tr>
+                    <tr><td>ח</td><td>ז</td><td>ח</td><td>ט</td><td>B-C-D</td></tr>
+                    <tr><td>ט</td><td>ח</td><td>ט</td><td>י</td><td>C-D-E</td></tr>
+                    <tr><td>י</td><td>ט</td><td>י</td><td>כ</td><td>D-E-F</td></tr>
+                    <tr><td>כ/ך</td><td>י</td><td>כ</td><td>ל</td><td>E-F-G</td></tr>
+                    <tr><td>ל</td><td>כ</td><td>ל</td><td>מ</td><td>F-G-A</td></tr>
+                    <tr><td>מ/ם</td><td>ל</td><td>מ</td><td>נ</td><td>G-A-B</td></tr>
+                    <tr><td>נ/ן</td><td>מ</td><td>נ</td><td>ס</td><td>A-B-C</td></tr>
+                    <tr><td>ס</td><td>נ</td><td>ס</td><td>ע</td><td>B-C-D</td></tr>
+                    <tr><td>ע</td><td>ס</td><td>ע</td><td>פ</td><td>C-D-E</td></tr>
+                    <tr><td>פ/ף</td><td>ע</td><td>פ</td><td>צ</td><td>D-E-F</td></tr>
+                    <tr><td>צ/ץ</td><td>פ</td><td>צ</td><td>ק</td><td>E-F-G</td></tr>
+                    <tr><td>ק</td><td>צ</td><td>ק</td><td>ר</td><td>F-G-A</td></tr>
+                    <tr><td>ר</td><td>ק</td><td>ר</td><td>ש</td><td>G-A-B</td></tr>
+                    <tr><td>ש</td><td>ר</td><td>ש</td><td>ת</td><td>A-B-C</td></tr>
+                    <tr><td>ת</td><td>ש</td><td>ת</td><td>א</td><td>B-C-C</td></tr>
+                </table>
+            </div>
+            
+
+        </div>
+
+        <!-- כרטיס טעמי המקרא -->
+        <div class="card">
+            <div class="card-title">🎼 טעמי המקרא</div>
+
+            <div class="taamim-legend">
+                <span><span class="legend-dot dis"></span> מפסיק (דיסיינקטיב)</span>
+                <span><span class="legend-dot con"></span> מחבר (קוניינקטיב)</span>
+            </div>
+
+            <div class="taamim-tabs">
+                <div class="taamim-tab active" onclick="switchTaamimTab('torah')">📜 תורה, נביאים וכתובים</div>
+                <div class="taamim-tab" onclick="switchTaamimTab('emet')">📖 טעמי אמ״ת</div>
+            </div>
+
+            <!-- === תורה === -->
+            <div class="taamim-panel active" id="torahPanel">
+
+                <div class="taamim-section-title">👑 קיסרים — מפסיקים גדולים (דרגה 1)</div>
+                <div class="taamim-grid" id="torahLevel1"></div>
+
+                <div class="taamim-section-title">🏛️ מלכים — מפסיקים בינוניים (דרגה 2)</div>
+                <div class="taamim-grid" id="torahLevel2"></div>
+
+                <div class="taamim-section-title">⚔️ משנים/שלישים — מפסיקים קטנים (דרגה 3)</div>
+                <div class="taamim-grid" id="torahLevel3"></div>
+
+                <div class="taamim-section-title">🛡️ סגנים — מפסיקים (דרגה 4)</div>
+                <div class="taamim-grid" id="torahLevel4"></div>
+
+                <div class="taamim-section-title">🔗 מחברים (משרתים)</div>
+                <div class="taamim-grid" id="torahLevel0"></div>
+            </div>
+
+            <!-- === אמ"ת === -->
+            <div class="taamim-panel" id="emetPanel">
+
+                <div class="taamim-section-title">👑 קיסרים — מפסיקים גדולים (דרגה 1)</div>
+                <div class="taamim-grid" id="emetLevel1"></div>
+
+                <div class="taamim-section-title">🏛️ מלכים — מפסיקים בינוניים (דרגה 2)</div>
+                <div class="taamim-grid" id="emetLevel2"></div>
+
+                <div class="taamim-section-title">⚔️ שלישים — מפסיקים קטנים (דרגה 3)</div>
+                <div class="taamim-grid" id="emetLevel3"></div>
+
+                <div class="taamim-section-title">🛡️ סגנים — מפסיקים (דרגה 4)</div>
+                <div class="taamim-grid" id="emetLevel4"></div>
+
+                <div class="taamim-section-title">🔗 מחברים (משרתים)</div>
+                <div class="taamim-grid" id="emetLevel0"></div>
+            </div>
+        </div>
+
+        <footer>♥ סולם פרייג'יש (אהבה רבה) | 72 סמי טונים ♥</footer>
+    </div>
+
+    <script src="https://surikov.github.io/webaudiofont/npm/dist/WebAudioFontPlayer.js"></script>
+    <script>
+        // ========================================
+        // סולם פריג'יש (אהבה רבה) ב-72-EDO
+        // ========================================
+        const SEMITONE_72 = 1/6;
+        
+        const PHRYGISH_SCALE = {
+            'c': 60,
+            'd': 61 - (2 * SEMITONE_72),
+            'e': 64 - SEMITONE_72,
+            'f': 65,
+            'g': 67,
+            'a': 68 - (2 * SEMITONE_72),
+            'b': 71 - SEMITONE_72,
+        };
+
+        // ========================================
+        // מיפוי אותיות → תווים (בסיסי, לכל אות)
+        // ========================================
+        const ALEPH_BET_ORDER = ['א','ב','ג','ד','ה','ו','ז','ח','ט','י','כ','ל','מ','נ','ס','ע','פ','צ','ק','ר','ש','ת'];
+        const NOTES_ORDER = ['c','d','e','f','g','a','b']; // 7 תווים
+
+        // כל אות מקבלת תו לפי מיקומה ב-א"ב (מודולו 7)
+        const LETTER_TO_NOTE = {};
+        ALEPH_BET_ORDER.forEach((letter, i) => {
+            LETTER_TO_NOTE[letter] = NOTES_ORDER[i % 7];
+        });
+        // אותיות סופיות מקבלות את אותו תו כמו הרגילות
+        LETTER_TO_NOTE['ך'] = LETTER_TO_NOTE['כ'];
+        LETTER_TO_NOTE['ם'] = LETTER_TO_NOTE['מ'];
+        LETTER_TO_NOTE['ן'] = LETTER_TO_NOTE['נ'];
+        LETTER_TO_NOTE['ף'] = LETTER_TO_NOTE['פ'];
+        LETTER_TO_NOTE['ץ'] = LETTER_TO_NOTE['צ'];
+
+        // מיפוי אותיות סופיות לבסיסיות
+        const FINAL_TO_BASE = {'ך':'כ','ם':'מ','ן':'נ','ף':'פ','ץ':'צ'};
+
+        // ========================================
+        // שלשת האותיות: לפני - כתובה - אחרי
+        // ע"פ שיטת האריז"ל
+        // ========================================
+        function getTriplet(letter) {
+            const base = FINAL_TO_BASE[letter] || letter;
+            const idx = ALEPH_BET_ORDER.indexOf(base);
+            if (idx === -1) return null;
+            
+            // אות לפני: א מקבלת את עצמה (אין לפניה), שאר האותיות מקבלות את הקודמת
+            const beforeLetter = idx === 0 ? ALEPH_BET_ORDER[0] : ALEPH_BET_ORDER[idx - 1];
+            const selfLetter = ALEPH_BET_ORDER[idx];
+            // אות אחרי: ת מקבלת א (מעגלי), שאר האותיות מקבלות את הבאה
+            const afterLetter = ALEPH_BET_ORDER[(idx + 1) % 22];
+            
+            return {
+                before: { letter: beforeLetter, note: LETTER_TO_NOTE[beforeLetter] },
+                self: { letter: selfLetter, note: LETTER_TO_NOTE[selfLetter] },
+                after: { letter: afterLetter, note: LETTER_TO_NOTE[afterLetter] }
+            };
+        }
+
+        const NOTE_NAMES = {
+            'c': { heb: 'דו', eng: 'C' }, 'd': { heb: 'רה', eng: 'D' },
+            'e': { heb: 'מי', eng: 'E' }, 'f': { heb: 'פה', eng: 'F' },
+            'g': { heb: 'סול', eng: 'G' }, 'a': { heb: 'לה', eng: 'A' },
+            'b': { heb: 'סי', eng: 'B' }
+        };
+
+        // מיפוי לפסנתר וירטואלי (virtualpiano.net)
+        // המקשים ממופים לפי מקלדת:
+        // אוקטבה 3: 1=C 2=D 3=E 4=F 5=G 6=A 7=B | שחורים: !=C# @=D# $=F# %=G# ^=A#
+        // אוקטבה 4: 8=C 9=D 0=E q=F w=G e=A r=B | שחורים: *=C# (=D# Q=F# W=G# E=A#
+        // אוקטבה 5: t=C y=D u=E i=F o=G p=A a=B | שחורים: T=C# Y=D# I=F# O=G# P=A#
+        // אוקטבה 6: s=C d=D f=E g=F h=G j=A k=B | שחורים: S=C# D=D# G=F# H=G# J=A#
+        const MIDI_TO_VPIANO = {
+            36:'1', 37:'!', 38:'2', 39:'@', 40:'3', 41:'4', 42:'$', 43:'5', 44:'%', 45:'6', 46:'^', 47:'7',
+            48:'8', 49:'*', 50:'9', 51:'(', 52:'0', 53:'q', 54:'Q', 55:'w', 56:'W', 57:'e', 58:'E', 59:'r',
+            60:'t', 61:'T', 62:'y', 63:'Y', 64:'u', 65:'i', 66:'I', 67:'o', 68:'O', 69:'p', 70:'P', 71:'a',
+            72:'s', 73:'S', 74:'d', 75:'D', 76:'f', 77:'g', 78:'G', 79:'h', 80:'H', 81:'j', 82:'J', 83:'k'
+        };
+
+        // מיפוי ישיר מתו בסולם פרייג'יש למקש (אוקטבה 5 — מרכז הפסנתר)
+        // C=t  D♭=T  E=u  F=i  G=o  A♭=O  B=a
+        const VPIANO_KEYS = {
+            'c': 't', 'd': 'T', 'e': 'u', 'f': 'i', 'g': 'o', 'a': 'O', 'b': 'a'
+        };
+
+        // ========================================
+        // טעמי מקרא — תורה (כ"א ספרים)
+        // ========================================
+        const TAAMIM = {
+            '\u0591': { name: 'אתנחתא', duration: 0.9, pitch: 0, level: 1, type: 'disjunctive' },
+            '\u05C3': { name: 'סוף פסוק', duration: 1.0, pitch: 0, level: 1, type: 'disjunctive' },
+            '\u0592': { name: 'סגול', duration: 0.75, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0593': { name: 'שלשלת', duration: 0.8, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0594': { name: 'זקף קטן', duration: 0.7, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0595': { name: 'זקף גדול', duration: 0.75, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0596': { name: 'טפחא', duration: 0.7, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0597': { name: 'רביע', duration: 0.6, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u0598': { name: 'זרקא', duration: 0.6, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u0599': { name: 'פשטא', duration: 0.55, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u059A': { name: 'יתיב', duration: 0.55, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u059B': { name: 'תביר', duration: 0.55, pitch: 0, level: 3, type: 'disjunctive' },
+            // === אזלא/גרש — הגל השני ===
+            '\u059C': { name: 'אזלא/גרש', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive', isAzla: true },
+            '\u059D': { name: 'גרשיים', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive' },
+            '\u059E': { name: 'גרש מוקדם', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive' },
+            '\u059F': { name: 'קרני פרה', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive' },
+            '\u05A0': { name: 'טלישא גדולה', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive' },
+            '\u05A1': { name: 'פזר', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive' },
+            '\u05A2': { name: 'אתנח הפוך', duration: 0.8, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u05A3': { name: 'מונח', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A4': { name: 'מהפך', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A5': { name: 'מרכא', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A6': { name: 'מרכא כפולה', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A7': { name: 'דרגא', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive' },
+            // === קדמא — הגל הראשון ===
+            '\u05A8': { name: 'קדמא', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive', isKadma: true },
+            '\u05A9': { name: 'תלישא קטנה', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AA': { name: 'ירח בן יומו', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AB': { name: 'עולה', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AC': { name: 'עילוי', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AD': { name: 'דחי', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AE': { name: 'צנורית', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05AF': { name: 'מסורה', duration: 0.3, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05BD': { name: 'מתג', duration: 0.3, pitch: 0, level: 0, type: 'conjunctive' },
+        };
+
+        // ========================================
+        // טעמי אמ"ת — תהלים, משלי, איוב
+        // ========================================
+        const TAAMIM_EMET = {
+            '\u0591': { name: 'אתנח', duration: 0.9, pitch: 0, level: 1, type: 'disjunctive' },
+            '\u05C3': { name: 'סוף פסוק', duration: 1.0, pitch: 0, level: 1, type: 'disjunctive' },
+            '\u05A2': { name: 'עולה ויורד', duration: 0.85, pitch: 0, level: 1, type: 'disjunctive' },
+            '\u0592': { name: 'רביע גדול', duration: 0.75, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0597': { name: 'רביע קטן', duration: 0.6, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u05A1': { name: 'פזר', duration: 0.55, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0593': { name: 'שלשלת גדולה', duration: 0.8, pitch: 0, level: 2, type: 'disjunctive' },
+            '\u0594': { name: 'צנורא', duration: 0.55, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u0599': { name: 'סינור', duration: 0.5, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u059B': { name: 'דחי', duration: 0.5, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u059A': { name: 'פסיק', duration: 0.5, pitch: 0, level: 3, type: 'disjunctive' },
+            '\u059C': { name: 'אזלא/גרש', duration: 0.5, pitch: 0, level: 4, type: 'disjunctive', isAzla: true },
+            '\u05A3': { name: 'מונח', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A5': { name: 'מרכא', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A4': { name: 'עילוי', duration: 0.35, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A8': { name: 'טרחא/קדמא', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive', isKadma: true },
+            '\u05AB': { name: 'גלגל', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05A6': { name: 'מרכא כפולה', duration: 0.4, pitch: 0, level: 0, type: 'conjunctive' },
+            '\u05BD': { name: 'מתג', duration: 0.3, pitch: 0, level: 0, type: 'conjunctive' },
+        };
+
+        function getCurrentTaamim() {
+            const type = document.querySelector('input[name="taamimType"]:checked')?.value || 'regular';
+            return type === 'emet' ? TAAMIM_EMET : TAAMIM;
+        }
+
+        // ========================================
+        // מצב ניגון — מאותיות או מטעמים
+        // ========================================
+        let melodyMode = 'letters'; // 'letters' or 'taamim'
+
+        function setMelodyMode(mode) {
+            melodyMode = mode;
+            document.querySelectorAll('[data-mm]').forEach(t => t.classList.toggle('active', t.dataset.mm === mode));
+            const desc = document.getElementById('melodyModeDesc');
+            if (mode === 'letters') {
+                desc.textContent = 'כל אות ממופה לצליל בסולם פרייג\'יש — שלשות: לפני · כתובה · אחרי';
+            } else {
+                desc.textContent = 'כל טעם הוא מוטיב מלודי שלם — המנגינה נגזרת מהטעמים כמו בקריאת תורה מסורתית';
+            }
+        }
+
+        // מוטיבים מלודיים לטעמים — מבוסס על מסורת אשכנזית (מופשט)
+        // כל מוטיב = רצף של דרגות סולם (0=דו, 1=רה♭, 2=מי, 3=פה, 4=סול, 5=לה♭, 6=סי♭)
+        const SCALE_DEGREES = [60, 61, 64, 65, 67, 68, 71]; // MIDI values for Phrygish scale
+
+        const TAAM_MOTIFS = {
+            // === קיסרים (Level 1) — מנוחה גדולה ===
+            '\u0591': [4,3,2,1,0],           // אתנחתא — ירידה למנוחה
+            '\u05C3': [4,3,2,1,0,0],         // סוף פסוק — סיום מלא
+
+            // === מלכים (Level 2) — עצירה משמעותית ===
+            '\u0592': [5,6,5,4,3],           // סגול — עלייה וירידה
+            '\u0593': [3,4,3,4,3,2,3,2],     // שלשלת — תנודה (3 פעמים!)
+            '\u0594': [2,4,3,2],             // זקף קטן — עלייה וחזרה
+            '\u0595': [3,5,4,3,2],           // זקף גדול — עלייה גדולה יותר
+            '\u0596': [3,2,1,0],             // טפחא — ירידה רכה
+
+            // === משנים (Level 3) — הפסקה קלה ===
+            '\u0597': [4,5,4,3],             // רביע — קשת קלה
+            '\u0598': [5,6,5,4],             // זרקא — זריקה למעלה
+            '\u0599': [4,3,2],               // פשטא — ירידה פשוטה
+            '\u059A': [3,2,3,2],             // יתיב — ישיבה
+            '\u059B': [3,2,1,2],             // תביר — שבירה
+
+            // === סגנים (Level 4) — הפרדה קלה ===
+            '\u059C': [4,5],                 // אזלא/גרש — קפיצה קדימה
+            '\u059D': [4,5,4,5],             // גרשיים — כפולה
+            '\u059E': [4,5],                 // גרש מוקדם
+            '\u059F': [5,6,5,6,5],           // קרני פרה
+            '\u05A0': [6,5,4],               // טלישא גדולה — ירידה מלמעלה
+            '\u05A1': [4,5,6,5,4],           // פזר — פיזור
+
+            // === מחברים (Level 0) — זרימה רציפה ===
+            '\u05A3': [2,3],                 // מונח — הנחה
+            '\u05A4': [3,2,3],               // מהפך — היפוך
+            '\u05A5': [2,3,2],               // מרכא — משיכה
+            '\u05A6': [2,3,2,3],             // מרכא כפולה
+            '\u05A7': [2,3,4,3],             // דרגא — מדרגה
+            '\u05A8': [3,4],                 // קדמא — קדימה
+            '\u05A9': [4,3],                 // תלישא קטנה
+            '\u05AA': [3,2,3],               // ירח בן יומו
+            '\u05AB': [3,4,5],               // עולה
+            '\u05AC': [4,5,6],               // עילוי
+            '\u05AD': [1,0,1],               // דחי — דחייה
+            '\u05AE': [2,3,4],               // צינורית/זינורית
+            '\u05BD': [2,3]                  // מתג — ברירת מחדל
+        };
+
+        // מוטיב ברירת מחדל למילים ללא טעם
+        const DEFAULT_MOTIF = [2,3,2];
+
+        // ========================================
+        // State
+        // ========================================
+        let audioContext = null;
+        let currentInstrument = 'piano';
+        let activeInstruments = new Set(['piano']);
+        let tempo = 58;
+        let volume = 0.8;
+        let isPlaying = false;
+        let isPianoPlaying = false;
+        let parsedNotes = [];
+        let soundfonts = {};
+        let wafPlayer = null;
+        let wafInstruments = {};
+
+        const WAF_URLS = {
+            piano: 'https://surikov.github.io/webaudiofontdata/sound/0000_JCLive_sf2_file.js',
+            harp: 'https://surikov.github.io/webaudiofontdata/sound/0460_GeneralUserGS_sf2_file.js',
+            violin: 'https://surikov.github.io/webaudiofontdata/sound/0400_JCLive_sf2_file.js',
+            strings: 'https://surikov.github.io/webaudiofontdata/sound/0480_JCLive_sf2_file.js',
+            flute: 'https://surikov.github.io/webaudiofontdata/sound/0730_JCLive_sf2_file.js',
+            choir: 'https://surikov.github.io/webaudiofontdata/sound/0520_JCLive_sf2_file.js',
+            cymbals: 'https://surikov.github.io/webaudiofontdata/sound/12849_21_FluidR3_GM_sf2_file.js'
+        };
+
+        const WAF_NAMES = {
+            piano: '_tone_0000_JCLive_sf2_file',
+            harp: '_tone_0460_GeneralUserGS_sf2_file',
+            violin: '_tone_0400_JCLive_sf2_file',
+            strings: '_tone_0480_JCLive_sf2_file',
+            flute: '_tone_0730_JCLive_sf2_file',
+            choir: '_tone_0520_JCLive_sf2_file',
+            cymbals: '_drum_49_21_FluidR3_GM_sf2_file'
+        };
+
+        // ========================================
+        // Init
+        // ========================================
+        // ========================================
+        // תצוגת תווים על חמשה (Staff Notation)
+        // ========================================
+        let staffNoteFilter = 'all';
+        let staffNoteElements = []; // track SVG note positions for highlighting
+
+        function setStaffNoteType(type) {
+            staffNoteFilter = type;
+            document.querySelectorAll('.staff-toggle button').forEach(b => b.classList.toggle('active', b.dataset.st === type));
+            renderStaff();
+        }
+
+        function clearStaff() {
+            document.getElementById('staffContainer').innerHTML = '';
+            document.getElementById('staffCard').style.display = 'none';
+            staffNoteElements = [];
+        }
+
+        // Highlight a specific note on the staff by direct index
+        function highlightStaffNote(noteIdx) {
+            // Remove previous highlights
+            document.querySelectorAll('.staff-note-highlight').forEach(el => el.remove());
+            
+            const info = staffNoteElements[noteIdx];
+            if (!info) return;
+
+            const container = document.getElementById('staffContainer');
+            const svg = container.querySelector('svg');
+            if (!svg) return;
+
+            // Add highlight circle
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', info.x);
+            circle.setAttribute('cy', info.y);
+            circle.setAttribute('r', '8');
+            circle.setAttribute('fill', 'rgba(224,122,149,0.3)');
+            circle.setAttribute('stroke', '#e07a95');
+            circle.setAttribute('stroke-width', '2');
+            circle.setAttribute('class', 'staff-note-highlight');
+            svg.appendChild(circle);
+
+            // Auto-scroll to show the highlighted note
+            const scrollContainer = container;
+            const noteX = info.x;
+            const visibleWidth = scrollContainer.clientWidth;
+            if (noteX > scrollContainer.scrollLeft + visibleWidth - 60 || noteX < scrollContainer.scrollLeft + 60) {
+                scrollContainer.scrollTo({ left: Math.max(0, noteX - visibleWidth / 2), behavior: 'smooth' });
+            }
+        }
+
+        function clearStaffHighlight() {
+            document.querySelectorAll('.staff-note-highlight').forEach(el => el.remove());
+        }
+
+        function renderStaff() {
+            if (!parsedNotes.length) return;
+            const container = document.getElementById('staffContainer');
+            const currentTaamim = getCurrentTaamim();
+            staffNoteElements = []; // reset tracking
+
+            // Collect all pitches
+            const notes = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    notes.push({ rest: true, verse: item.restType === 'verse' });
+                } else if (item.type === 'triplet') {
+                    let dur = 0.45, tName = '';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t]) { dur = Math.max(dur, currentTaamim[t].duration); tName = currentTaamim[t].name; }
+                    });
+                    // Map duration to note type
+                    let noteType;
+                    if (dur >= 0.9) noteType = 'whole';
+                    else if (dur >= 0.7) noteType = 'half';
+                    else if (dur >= 0.5) noteType = 'quarter';
+                    else if (dur >= 0.35) noteType = 'eighth';
+                    else noteType = '16th';
+
+                    ['before','self','after'].forEach(pos => {
+                        const src = pos === 'self' ? item.self : (pos === 'before' ? item.before : item.after);
+                        const subType = pos === 'self' ? noteType :
+                            (noteType === 'whole' ? 'quarter' : noteType === 'half' ? 'eighth' : '16th');
+                        notes.push({
+                            rest: false,
+                            pitch: Math.round(PHRYGISH_SCALE[src.note]),
+                            letter: src.letter,
+                            noteType: pos === 'self' ? noteType : subType,
+                            taam: pos === 'self' ? tName : '',
+                            isSelf: pos === 'self'
+                        });
+                    });
+                } else if (item.type === 'taam_motif') {
+                    let noteType;
+                    if (item.duration >= 0.9) noteType = 'whole';
+                    else if (item.duration >= 0.7) noteType = 'half';
+                    else if (item.duration >= 0.5) noteType = 'quarter';
+                    else if (item.duration >= 0.35) noteType = 'eighth';
+                    else noteType = '16th';
+
+                    item.motif.forEach((midi, mi) => {
+                        notes.push({
+                            rest: false,
+                            pitch: midi,
+                            letter: item.letters[mi % item.letters.length] || '·',
+                            noteType: mi === 0 ? noteType : (noteType === 'whole' ? 'quarter' : 'eighth'),
+                            taam: mi === 0 ? item.taamName : '',
+                            isSelf: mi === 0
+                        });
+                    });
+                }
+            });
+
+            // Filter
+            const filtered = staffNoteFilter === 'all' ? notes :
+                notes.map(n => n.rest ? n : (n.noteType === staffNoteFilter ? n : {...n, hidden: true}));
+
+            // SVG dimensions
+            const noteSpacing = 28;
+            const marginLeft = 60;
+            const staffTop = 50;
+            const lineGap = 8;
+            const svgW = marginLeft + filtered.length * noteSpacing + 40;
+            const svgH = 160;
+
+            // MIDI to staff Y position (C4=60 is middle C, on first ledger line below staff)
+            function midiToY(midi) {
+                // Staff lines: F5(77)=line1, D5(74)=line2, B4(71)=line3, G4(67)=line4, E4(64)=line5
+                // Each semitone ~= lineGap/2, but we use diatonic
+                const noteNames = [0,0,1,1,2,3,3,4,4,5,5,6]; // C=0,D=1,E=2,F=3,G=4,A=5,B=6
+                const oct = Math.floor(midi / 12) - 1;
+                const diatonic = noteNames[midi % 12] + oct * 7;
+                const refDiatonic = noteNames[64 % 12] + (Math.floor(64/12)-1) * 7; // E4
+                const stepsFromE4 = diatonic - refDiatonic;
+                return staffTop + 4 * lineGap - stepsFromE4 * (lineGap / 2);
+            }
+
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}">`;
+
+            // Background
+            svg += `<rect width="${svgW}" height="${svgH}" fill="white"/>`;
+
+            // 5 staff lines
+            for (let i = 0; i < 5; i++) {
+                const y = staffTop + i * lineGap;
+                svg += `<line x1="30" y1="${y}" x2="${svgW-10}" y2="${y}" stroke="#c8a0b0" stroke-width="0.8"/>`;
+            }
+
+            // Treble clef approximation
+            svg += `<text x="35" y="${staffTop + 3*lineGap}" font-size="32" fill="#e07a95" font-family="serif">𝄞</text>`;
+
+            // Draw notes
+            let x = marginLeft;
+            filtered.forEach((n, i) => {
+                if (n.rest) {
+                    if (n.verse) {
+                        // Bar line for verse end
+                        svg += `<line x1="${x}" y1="${staffTop}" x2="${x}" y2="${staffTop+4*lineGap}" stroke="#e07a95" stroke-width="2"/>`;
+                    }
+                    x += noteSpacing * 0.5;
+                    return;
+                }
+                if (n.hidden) { staffNoteElements.push({ x, y: midiToY(n.pitch) }); x += noteSpacing * 0.3; return; }
+
+                const y = midiToY(n.pitch);
+                const color = n.isSelf ? '#e07a95' : '#c8a0b0';
+
+                // Track position for playback highlighting
+                staffNoteElements.push({ x, y });
+
+                // Ledger lines if needed
+                if (y > staffTop + 4 * lineGap + lineGap/2) {
+                    for (let ly = staffTop + 5*lineGap; ly <= y + 2; ly += lineGap) {
+                        svg += `<line x1="${x-6}" y1="${ly}" x2="${x+6}" y2="${ly}" stroke="#ddb" stroke-width="0.7"/>`;
+                    }
+                }
+                if (y < staffTop - lineGap/2) {
+                    for (let ly = staffTop - lineGap; ly >= y - 2; ly -= lineGap) {
+                        svg += `<line x1="${x-6}" y1="${ly}" x2="${x+6}" y2="${ly}" stroke="#ddb" stroke-width="0.7"/>`;
+                    }
+                }
+
+                // Note head
+                const filled = n.noteType !== 'whole' && n.noteType !== 'half';
+                svg += `<ellipse cx="${x}" cy="${y}" rx="4.5" ry="3.5" fill="${filled ? color : 'white'}" stroke="${color}" stroke-width="1.2" transform="rotate(-15 ${x} ${y})"/>`;
+
+                // Stem (not for whole notes)
+                if (n.noteType !== 'whole') {
+                    const stemUp = y > staffTop + 2 * lineGap;
+                    const sy1 = stemUp ? y - 3 : y + 3;
+                    const sy2 = stemUp ? y - 22 : y + 22;
+                    svg += `<line x1="${stemUp ? x+4 : x-4}" y1="${sy1}" x2="${stemUp ? x+4 : x-4}" y2="${sy2}" stroke="${color}" stroke-width="1"/>`;
+
+                    // Flag for eighth and 16th
+                    if (n.noteType === 'eighth' || n.noteType === '16th') {
+                        const fx = stemUp ? x+4 : x-4;
+                        const fy = stemUp ? sy2 : sy2;
+                        const dir = stemUp ? 1 : -1;
+                        svg += `<path d="M${fx},${fy} q5,${6*dir} 0,${12*dir}" fill="none" stroke="${color}" stroke-width="1"/>`;
+                        if (n.noteType === '16th') {
+                            svg += `<path d="M${fx},${fy+5*dir} q5,${6*dir} 0,${12*dir}" fill="none" stroke="${color}" stroke-width="1"/>`;
+                        }
+                    }
+                }
+
+                // Letter below
+                svg += `<text x="${x}" y="${staffTop + 5*lineGap + 10}" text-anchor="middle" font-size="7" fill="#e07a95" font-family="'Frank Ruhl Libre',serif">${n.letter}</text>`;
+
+                // Taam name above
+                if (n.taam) {
+                    svg += `<text x="${x}" y="${staffTop - 8}" text-anchor="middle" font-size="6" fill="#c06080" font-family="'Suez One',serif">${n.taam}</text>`;
+                }
+
+                x += noteSpacing;
+            });
+
+            svg += '</svg>';
+            container.innerHTML = svg;
+            document.getElementById('staffCard').style.display = 'block';
+        }
+
+        // ========================================
+        // טאבים של תצוגת פלט — לפי מילה / לפי משפט
+        // ========================================
+        function switchOutputTab(tab) {
+            const tabs = document.querySelectorAll('#outputContainer .taamim-tab');
+            tabs[0].classList.toggle('active', tab === 'word');
+            tabs[1].classList.toggle('active', tab === 'sentence');
+            document.getElementById('wordView').style.display = tab === 'word' ? 'contents' : 'none';
+            document.getElementById('sentenceView').style.display = tab === 'sentence' ? 'block' : 'none';
+        }
+
+        // ========================================
+        // תצוגת טעמי המקרא
+        // ========================================
+        function switchTaamimTab(tab) {
+            document.querySelectorAll('.taamim-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.taamim-panel').forEach(p => p.classList.remove('active'));
+            if (tab === 'torah') {
+                document.querySelectorAll('.taamim-tab')[0].classList.add('active');
+                document.getElementById('torahPanel').classList.add('active');
+            } else {
+                document.querySelectorAll('.taamim-tab')[1].classList.add('active');
+                document.getElementById('emetPanel').classList.add('active');
+            }
+        }
+
+        function createTaamCard(unicode, info) {
+            const sampleLetter = '\u05D1'; // ב
+            const sampleWithTaam = sampleLetter + unicode;
+            const typeClass = info.type === 'disjunctive' ? 'disjunctive' : 'conjunctive';
+            const typeName = info.type === 'disjunctive' ? 'מפסיק' : 'מחבר';
+            const codePoint = 'U+' + unicode.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0');
+
+            return `<div class="taam-card ${typeClass}">
+                <div class="taam-sample">${sampleWithTaam}</div>
+                <div class="taam-name">${info.name}</div>
+                <div class="taam-unicode">${codePoint}</div>
+                <div class="taam-type-badge ${typeClass}">${typeName}</div>
+            </div>`;
+        }
+
+        function populateTaamimDisplay() {
+            // Torah
+            const torahByLevel = { 1: [], 2: [], 3: [], 4: [], 0: [] };
+            for (const [unicode, info] of Object.entries(TAAMIM)) {
+                const lvl = info.level in torahByLevel ? info.level : 0;
+                torahByLevel[lvl].push(createTaamCard(unicode, info));
+            }
+            for (const lvl of [1, 2, 3, 4, 0]) {
+                const el = document.getElementById('torahLevel' + lvl);
+                if (el) el.innerHTML = torahByLevel[lvl].join('');
+            }
+
+            // Emet
+            const emetByLevel = { 1: [], 2: [], 3: [], 4: [], 0: [] };
+            for (const [unicode, info] of Object.entries(TAAMIM_EMET)) {
+                const lvl = info.level in emetByLevel ? info.level : 0;
+                emetByLevel[lvl].push(createTaamCard(unicode, info));
+            }
+            for (const lvl of [1, 2, 3, 4, 0]) {
+                const el = document.getElementById('emetLevel' + lvl);
+                if (el) el.innerHTML = emetByLevel[lvl].join('');
+            }
+
+            // הסתר מקטעים ריקים
+            document.querySelectorAll('.taamim-grid').forEach(grid => {
+                if (!grid.innerHTML.trim()) {
+                    grid.style.display = 'none';
+                    grid.previousElementSibling.style.display = 'none';
+                }
+            });
+        }
+
+        function clearAll() {
+            if (confirm('לנקות את הטקסט?')) {
+                document.getElementById('textInput').value = '';
+                document.getElementById('outputContainer').style.display = 'none';
+                document.getElementById('preprocessedBox').style.display = 'none';
+                document.getElementById('staffCard').style.display = 'none';
+                parsedNotes = [];
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initPiano();
+            initEventListeners();
+            loadWebAudioFonts();
+            populateTaamimDisplay();
+        });
+
+        function getAudioContext() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') audioContext.resume();
+            return audioContext;
+        }
+
+        async function loadWebAudioFonts() {
+            const ctx = getAudioContext();
+            wafPlayer = new WebAudioFontPlayer();
+            for (const [inst, url] of Object.entries(WAF_URLS)) {
+                try {
+                    await loadScript(url);
+                    const fontName = WAF_NAMES[inst];
+                    if (window[fontName]) {
+                        wafPlayer.adjustPreset(ctx, window[fontName]);
+                        wafInstruments[inst] = window[fontName];
+                    }
+                } catch(e) {}
+            }
+        }
+
+        function loadScript(url) {
+            return new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = url; s.onload = resolve; s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        // ========================================
+        // Piano
+        // ========================================
+        function initPiano() {
+            const container = document.getElementById('pianoKeys');
+            const whiteNotes = ['c','d','e','f','g','a','b'];
+            const labels = ['דו','רה','מי','פה','סול','לה','סי'];
+            const hasBlackAfter = [true,true,false,true,true,true,false];
+            let html = '';
+            for (let oct = 0; oct < 3; oct++) {
+                whiteNotes.forEach((note, i) => {
+                    const midi = 48 + oct*12 + [0,2,4,5,7,9,11][i];
+                    html += `<div class="white-key" data-midi="${midi}" data-note="${note}"><span class="note-label">${labels[i]}</span></div>`;
+                });
+            }
+            container.innerHTML = html;
+            const whiteKeys = container.querySelectorAll('.white-key');
+            for (let oct = 0; oct < 3; oct++) {
+                for (let i = 0; i < 7; i++) {
+                    if (hasBlackAfter[i]) {
+                        const idx = oct*7+i;
+                        const wk = whiteKeys[idx];
+                        if (wk) {
+                            const bk = document.createElement('div');
+                            bk.className = 'black-key';
+                            bk.dataset.midi = parseInt(wk.dataset.midi)+1;
+                            bk.style.left = (idx*34+24)+'px';
+                            container.appendChild(bk);
+                        }
+                    }
+                }
+            }
+            container.querySelectorAll('.white-key,.black-key').forEach(key => {
+                const play = () => {
+                    const midi = parseInt(key.dataset.midi);
+                    const insts = [...activeInstruments];
+                    if (!insts.length) { playNote(midi); return; }
+                    insts.forEach((inst,idx) => setTimeout(() => playNote(midi,0.8,inst), idx*15));
+                };
+                key.addEventListener('mousedown', play);
+                key.addEventListener('touchstart', e => { e.preventDefault(); play(); });
+            });
+        }
+
+        // ========================================
+        // Events
+        // ========================================
+        function initEventListeners() {
+            document.getElementById('convertBtn').addEventListener('click', convertText);
+
+            document.querySelectorAll('.instrument-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    if (e.target.classList.contains('load-sf-btn')) return;
+                    const inst = btn.dataset.instrument;
+                    if (['piano','harp','violin','strings','flute','choir','cymbals'].includes(inst)) {
+                        btn.classList.toggle('active');
+                        if (activeInstruments.has(inst)) activeInstruments.delete(inst);
+                        else activeInstruments.add(inst);
+                        currentInstrument = activeInstruments.size > 0 ? [...activeInstruments][0] : null;
+                    } else if (inst === 'piano-strings') {
+                        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+                        activeInstruments = new Set(['piano','strings']);
+                        btn.classList.add('active');
+                        document.querySelector('[data-instrument="piano"]').classList.add('active');
+                        document.querySelector('[data-instrument="strings"]').classList.add('active');
+                        currentInstrument = 'piano';
+                    } else if (inst === 'orchestra') {
+                        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+                        activeInstruments = new Set(['piano','strings','violin','harp']);
+                        btn.classList.add('active');
+                        activeInstruments.forEach(i => document.querySelector(`[data-instrument="${i}"]`)?.classList.add('active'));
+                        currentInstrument = 'piano';
+                    } else if (inst === 'all') {
+                        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.remove('active'));
+                        activeInstruments = new Set(['piano','harp','violin','strings','flute','choir','cymbals']);
+                        document.querySelectorAll('.instrument-btn').forEach(b => b.classList.add('active'));
+                        currentInstrument = 'piano';
+                    }
+                });
+            });
+
+            document.getElementById('tempoSlider').addEventListener('input', e => {
+                tempo = parseInt(e.target.value);
+                document.getElementById('tempoValue').textContent = tempo;
+            });
+
+            document.querySelectorAll('.load-sf-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const inst = btn.dataset.instrument;
+                    const parent = btn.closest('.instrument-btn');
+                    if (parent.classList.contains('has-soundfont')) {
+                        delete soundfonts[inst];
+                        parent.classList.remove('has-soundfont');
+                        const ns = document.getElementById(`sf-name-${inst}`);
+                        if (ns) ns.textContent = '';
+                        btn.textContent = '➕';
+                    } else {
+                        document.getElementById(`sf-${inst}`).click();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.sf-file-input').forEach(input => {
+                input.addEventListener('change', e => {
+                    if (e.target.files[0]) loadSF2(e.target.files[0], input.dataset.instrument);
+                });
+            });
+
+            document.getElementById('volumeSlider').addEventListener('input', e => {
+                volume = parseInt(e.target.value) / 100;
+                document.getElementById('volumeValue').textContent = `${e.target.value}%`;
+            });
+
+            document.getElementById('playBtn').addEventListener('click', playMusic);
+            document.getElementById('stopBtn').addEventListener('click', stopMusic);
+            document.getElementById('downloadMidiBtn').addEventListener('click', downloadMidi);
+            document.getElementById('downloadXmlBtn').addEventListener('click', downloadMusicXML);
+            document.getElementById('downloadDocxBtn').addEventListener('click', downloadDocx);
+
+            function copyText(text) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+
+            // הסרת טעמים מהטקסט — להעתקה נקייה לפסנתר וירטואלי
+            function stripTaamim(text) {
+                return text.replace(/\([^)]*\)/g, '').replace(/  +/g, ' ').trim();
+            }
+
+            function flashBtn(btn, msg, origText) {
+                btn.textContent = msg;
+                setTimeout(() => btn.textContent = origText, 1500);
+            }
+
+            document.getElementById('copyHebrewBtn').addEventListener('click', () => {
+                copyText(document.getElementById('hebrewOutput').innerText);
+                flashBtn(document.getElementById('copyHebrewBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copyEnglishBtn').addEventListener('click', () => {
+                copyText(document.getElementById('englishOutput').innerText);
+                flashBtn(document.getElementById('copyEnglishBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceHebrewBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceHebrewOutput').innerText);
+                flashBtn(document.getElementById('copySentenceHebrewBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceEngBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceEngOutput').innerText);
+                flashBtn(document.getElementById('copySentenceEngBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copyVPianoBtn').addEventListener('click', () => {
+                copyText(document.getElementById('vpianoOutput').innerText);
+                flashBtn(document.getElementById('copyVPianoBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceVPianoBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceVPianoOutput').innerText);
+                flashBtn(document.getElementById('copySentenceVPianoBtn'), '✓ הועתק!', 'העתק');
+            });
+
+            document.getElementById('pianoPlayBtn').addEventListener('click', playPianoOutput);
+            document.getElementById('pianoStopBtn').addEventListener('click', stopPianoOutput);
+        }
+
+        // ========================================
+        // SF2 Loading
+        // ========================================
+        async function loadSF2(file, instrument) {
+            const nameSpan = document.getElementById(`sf-name-${instrument}`);
+            if (nameSpan) nameSpan.textContent = 'טוען...';
+            try {
+                const ab = await file.arrayBuffer();
+                const ctx = getAudioContext();
+                const dv = new DataView(ab);
+                if (String.fromCharCode(dv.getUint8(0),dv.getUint8(1),dv.getUint8(2),dv.getUint8(3)) !== 'RIFF') throw new Error('Invalid SF2');
+                let sampleData = null, offset = 12;
+                while (offset < ab.byteLength - 8 && !sampleData) {
+                    const cid = String.fromCharCode(dv.getUint8(offset),dv.getUint8(offset+1),dv.getUint8(offset+2),dv.getUint8(offset+3));
+                    const csz = dv.getUint32(offset+4, true);
+                    if (cid === 'LIST') {
+                        const lt = String.fromCharCode(dv.getUint8(offset+8),dv.getUint8(offset+9),dv.getUint8(offset+10),dv.getUint8(offset+11));
+                        if (lt === 'sdta') {
+                            let inner = offset+12;
+                            while (inner < offset+8+csz) {
+                                const iid = String.fromCharCode(dv.getUint8(inner),dv.getUint8(inner+1),dv.getUint8(inner+2),dv.getUint8(inner+3));
+                                const isz = dv.getUint32(inner+4,true);
+                                if (iid === 'smpl') { sampleData = new Int16Array(ab, inner+8, isz/2); break; }
+                                inner += 8 + isz + (isz%2);
+                            }
+                        }
+                    }
+                    offset += 8 + csz + (csz%2);
+                }
+                if (!sampleData) throw new Error('No samples');
+                const buf = ctx.createBuffer(1, sampleData.length, 44100);
+                const cd = buf.getChannelData(0);
+                for (let i = 0; i < sampleData.length; i++) cd[i] = sampleData[i]/32768;
+                soundfonts[instrument] = { buffer: buf, name: file.name };
+                const btn = document.querySelector(`.instrument-btn[data-instrument="${instrument}"]`);
+                if (btn) { btn.classList.add('has-soundfont'); const lb = btn.querySelector('.load-sf-btn'); if (lb) lb.textContent = '✕'; }
+                if (nameSpan) nameSpan.textContent = '✓ ' + file.name.substring(0,10);
+                playNote(60, 0.3, instrument);
+            } catch(e) {
+                if (nameSpan) nameSpan.textContent = '❌';
+            }
+        }
+
+        // ========================================
+        // Parse Text → Triplet Notes
+        // ========================================
+        function isHebrewLetter(ch) {
+            const base = FINAL_TO_BASE[ch] || ch;
+            return ALEPH_BET_ORDER.includes(base);
+        }
+
+        // ========================================
+        // עיבוד מקדים: פסוק בשורה + הסרת מספרי פסוקים
+        // ========================================
+        function preprocessText(text) {
+            // שלב 1: מפצלים לפי סוף פסוק (׃)
+            const verses = text.split('׃');
+            const cleaned = [];
+
+            for (let v of verses) {
+                v = v.trim();
+                if (!v) continue;
+
+                // שלב 2: מסירים מספר פסוק בתחילת הפסוק
+                // מספר פסוק = אות/אותיות עבריות ללא ניקוד (1-3 אותיות) ואחריהן רווח
+                // למשל: "א בראשית" → "בראשית" | "כו ויאמר" → "ויאמר"
+                // זה עובד כי מילים אמיתיות תמיד יש להן ניקוד/טעם צמוד (לא רווח)
+                v = v.replace(/^([א-ת]{1,3})\s+/, '');
+
+                cleaned.push(v.trim());
+            }
+
+            // שלב 3: מחזירים עם ׃ בין הפסוקים, כל פסוק בשורה
+            return cleaned.join(' ׃\n');
+        }
+
+        function parseText(text) {
+            text = text.replace(/\([^)]*\)/g,'').replace(/\[[^\]]*\]/g,'').replace(/[0-9]+/g,'');
+            // עיבוד מקדים — פסוק בשורה, הסרת מספרי פסוקים
+            text = preprocessText(text);
+            const notes = [];
+            let i = 0;
+            const currentTaamim = getCurrentTaamim();
+            
+            while (i < text.length) {
+                const char = text[i];
+                if (isHebrewLetter(char)) {
+                    const triplet = getTriplet(char);
+                    if (!triplet) { i++; continue; }
+                    
+                    // Collect taamim from following characters
+                    const taamimList = [];
+                    let j = i + 1;
+                    while (j < text.length) {
+                        const code = text[j].charCodeAt(0);
+                        if ((code >= 0x0591 && code <= 0x05AF) || code === 0x05BD || code === 0x05C3) {
+                            if (currentTaamim[text[j]]) taamimList.push(text[j]);
+                            j++;
+                        } else if ((code >= 0x05B0 && code <= 0x05BC) || code === 0x05BE || code === 0x05BF || (code >= 0x05C1 && code <= 0x05C7)) {
+                            j++;
+                        } else break;
+                    }
+                    
+                    // Check taamim flags
+                    let hasKadma = false, hasAzla = false;
+                    taamimList.forEach(t => {
+                        if (currentTaamim[t]?.isKadma) hasKadma = true;
+                        if (currentTaamim[t]?.isAzla) hasAzla = true;
+                    });
+                    
+                    // Push triplet as 3 sub-notes
+                    notes.push({
+                        type: 'triplet',
+                        letter: char,
+                        before: triplet.before,
+                        self: triplet.self,
+                        after: triplet.after,
+                        taamim: taamimList,
+                        hasKadma: hasKadma,
+                        hasAzla: hasAzla,
+                    });
+                    
+                    i = j;
+                } else if (char === ' ' || char === '\n' || char === '׃') {
+                    notes.push({ type: 'rest', restType: char === '׃' ? 'verse' : 'space' });
+                    i++;
+                } else {
+                    i++;
+                }
+            }
+            return notes;
+        }
+
+        // ========================================
+        // Parser for taam mode — melody from cantillation
+        // ========================================
+        function parseTextTaamMode(text) {
+            text = text.replace(/\([^)]*\)/g,'').replace(/\[[^\]]*\]/g,'').replace(/[0-9]+/g,'');
+            text = preprocessText(text);
+            const currentTaamim = getCurrentTaamim();
+            const notes = [];
+            let i = 0;
+
+            while (i < text.length) {
+                const char = text[i];
+                if (isHebrewLetter(char)) {
+                    // Collect full word: letters + niqqud + taamim
+                    let word = char;
+                    let letters = [char];
+                    let taamimList = [];
+                    let j = i + 1;
+
+                    while (j < text.length) {
+                        const ch = text[j];
+                        const code = ch.charCodeAt(0);
+                        if (isHebrewLetter(ch)) {
+                            letters.push(ch);
+                            word += ch;
+                            j++;
+                        } else if ((code >= 0x0591 && code <= 0x05AF) || code === 0x05BD || code === 0x05C3) {
+                            if (currentTaamim[ch]) taamimList.push(ch);
+                            word += ch;
+                            j++;
+                        } else if ((code >= 0x05B0 && code <= 0x05BC) || code === 0x05BE || code === 0x05BF || (code >= 0x05C1 && code <= 0x05C7)) {
+                            word += ch;
+                            j++;
+                        } else break;
+                    }
+
+                    // Find the main taam for this word
+                    let mainTaam = null;
+                    let taamName = '';
+                    taamimList.forEach(t => {
+                        if (currentTaamim[t]) {
+                            if (!mainTaam || currentTaamim[t].level > (currentTaamim[mainTaam]?.level ?? -1) ||
+                                (currentTaamim[t].level === currentTaamim[mainTaam]?.level && currentTaamim[t].type === 'disjunctive')) {
+                                mainTaam = t;
+                                taamName = currentTaamim[t].name;
+                            }
+                        }
+                    });
+
+                    // Get the motif for this taam
+                    const motif = mainTaam ? (TAAM_MOTIFS[mainTaam] || DEFAULT_MOTIF) : DEFAULT_MOTIF;
+                    const taamInfo = mainTaam ? currentTaamim[mainTaam] : null;
+
+                    // Create note entries from the motif
+                    notes.push({
+                        type: 'taam_motif',
+                        letters: letters,
+                        word: letters.join(''),
+                        taam: mainTaam,
+                        taamName: taamName,
+                        taamLevel: taamInfo?.level ?? -1,
+                        taamType: taamInfo?.type ?? '',
+                        duration: taamInfo?.duration ?? 0.45,
+                        motif: motif.map(deg => SCALE_DEGREES[deg % SCALE_DEGREES.length]),
+                        motifDegrees: motif,
+                        hasKadma: taamInfo?.isKadma || false,
+                        hasAzla: taamInfo?.isAzla || false
+                    });
+
+                    i = j;
+                } else if (char === ' ' || char === '\n' || char === '׃') {
+                    notes.push({ type: 'rest', restType: char === '׃' ? 'verse' : 'space' });
+                    i++;
+                } else {
+                    i++;
+                }
+            }
+            return notes;
+        }
+
+        // ========================================
+        // Convert & Display
+        // ========================================
+        function convertText() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) { alert('נא להדביק טקסט'); return; }
+
+            // הצגת הטקסט המנוקה
+            const cleanedText = preprocessText(
+                text.replace(/\([^)]*\)/g,'').replace(/\[[^\]]*\]/g,'').replace(/[0-9]+/g,'')
+            );
+            document.getElementById('preprocessedText').textContent = cleanedText;
+            document.getElementById('preprocessedBox').style.display = 'block';
+
+            if (melodyMode === 'taamim') {
+                parsedNotes = parseTextTaamMode(text);
+            } else {
+                parsedNotes = parseText(text);
+            }
+            const currentTaamim = getCurrentTaamim();
+
+            // === תצוגה לפי מילה ===
+            let hebLines = [], engLines = [];
+            let hebCurrent = '', engCurrent = '';
+            
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (hebCurrent) {
+                        hebLines.push(hebCurrent.trim());
+                        engLines.push(engCurrent.trim());
+                        hebCurrent = ''; engCurrent = '';
+                    }
+                } else if (item.type === 'triplet') {
+                    const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
+                    const taamDisplay = taamStr ? `(${taamStr})` : '';
+                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    
+                    hebCurrent += `[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay} `;
+                    engCurrent += taamDisplay ? `${notes}${taamDisplay} ` : `${notes} `;
+                } else if (item.type === 'taam_motif') {
+                    const taamDisplay = item.taamName ? `(${item.taamName})` : '';
+                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    
+                    hebCurrent += `${item.word}${taamDisplay} `;
+                    engCurrent += `${motifNotes}${taamDisplay} `;
+                }
+            });
+            
+            if (hebCurrent) {
+                hebLines.push(hebCurrent.trim());
+                engLines.push(engCurrent.trim());
+            }
+            
+            document.getElementById('hebrewOutput').innerText = hebLines.join('\n\n');
+            document.getElementById('englishOutput').innerText = engLines.join('\n\n');
+
+            // === תצוגת פסנתר וירטואלי — רווחים לפי טעמים ===
+            // מחבר = דבוק | סגנים = רווח | משנים = רווח כפול | מלכים = רווח משולש | קיסרים = שורה חדשה
+            let vpResult = '';
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (item.restType === 'verse') vpResult += '\n';
+                } else if (item.type === 'triplet') {
+                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    vpResult += notes;
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) vpResult += '   \n';       // קיסרים — שורה חדשה
+                        else if (mainLevel <= 2) vpResult += '    ';    // מלכים — 4 רווחים
+                        else if (mainLevel <= 3) vpResult += '   ';     // משנים — 3 רווחים
+                        else vpResult += '  ';                          // סגנים — 2 רווחים
+                    } else {
+                        vpResult += ' ';                                // מחבר — רווח אחד
+                    }
+                } else if (item.type === 'taam_motif') {
+                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    vpResult += motifNotes;
+                    if (item.taamType === 'disjunctive') {
+                        if (item.taamLevel <= 1) vpResult += '   \n';
+                        else if (item.taamLevel <= 2) vpResult += '    ';
+                        else if (item.taamLevel <= 3) vpResult += '   ';
+                        else vpResult += '  ';
+                    } else {
+                        vpResult += ' ';
+                    }
+                }
+            });
+            document.getElementById('vpianoOutput').innerText = vpResult.trim();
+
+            // === תצוגה לפי משפט (פסוק) ===
+            let verseHebParts = [], verseEngParts = [];
+            let verseHebAll = [], verseEngAll = [];
+
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest' && item.restType === 'verse') {
+                    if (verseHebParts.length) {
+                        verseHebAll.push(verseHebParts.join(' '));
+                        verseEngAll.push(verseEngParts.join(' '));
+                        verseHebParts = []; verseEngParts = [];
+                    }
+                } else if (item.type === 'triplet') {
+                    const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
+                    const taamDisplay = taamStr ? `(${taamStr})` : '';
+                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    verseHebParts.push(`[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay}`);
+                    verseEngParts.push(taamDisplay ? `${notes}${taamDisplay}` : notes);
+                } else if (item.type === 'taam_motif') {
+                    const taamDisplay = item.taamName ? `(${item.taamName})` : '';
+                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    verseHebParts.push(`${item.word}${taamDisplay}`);
+                    verseEngParts.push(taamDisplay ? `${motifNotes}${taamDisplay}` : motifNotes);
+                }
+            });
+
+            if (verseHebParts.length) {
+                verseHebAll.push(verseHebParts.join(' '));
+                verseEngAll.push(verseEngParts.join(' '));
+            }
+
+            document.getElementById('sentenceHebrewOutput').innerText = verseHebAll.join('\n\n');
+            document.getElementById('sentenceEngOutput').innerText = verseEngAll.join('\n\n');
+
+            // === פסנתר וירטואלי לפי משפט — רווחים לפי טעמים ===
+            let verseVP = '', verseVPAll = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest' && item.restType === 'verse') {
+                    if (verseVP) { verseVPAll.push(verseVP.trim()); verseVP = ''; }
+                } else if (item.type === 'triplet') {
+                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    verseVP += notes;
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) verseVP += '    ';
+                        else if (mainLevel <= 2) verseVP += '    ';
+                        else if (mainLevel <= 3) verseVP += '   ';
+                        else verseVP += '  ';
+                    } else {
+                        verseVP += ' ';
+                    }
+                } else if (item.type === 'taam_motif') {
+                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    verseVP += motifNotes;
+                    if (item.taamType === 'disjunctive') {
+                        if (item.taamLevel <= 1) verseVP += '    ';
+                        else if (item.taamLevel <= 2) verseVP += '    ';
+                        else if (item.taamLevel <= 3) verseVP += '   ';
+                        else verseVP += '  ';
+                    } else {
+                        verseVP += ' ';
+                    }
+                }
+            });
+            if (verseVP) verseVPAll.push(verseVP.trim());
+            document.getElementById('sentenceVPianoOutput').innerText = verseVPAll.join('\n\n');
+
+            document.getElementById('outputContainer').style.display = 'grid';
+            renderStaff();
+        }
+
+        // ========================================
+        // Audio Engine
+        // ========================================
+        function ensureMasterChain(ctx) {
+            if (window.masterCompressor) return;
+            window.masterCompressor = ctx.createDynamicsCompressor();
+            window.masterCompressor.threshold.value = -12;
+            window.masterCompressor.knee.value = 30;
+            window.masterCompressor.ratio.value = 3;
+            window.masterCompressor.attack.value = 0.02;
+            window.masterCompressor.release.value = 0.25;
+            window.masterCompressor.connect(ctx.destination);
+            
+            const reverbLen = ctx.sampleRate * 3.5;
+            const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate);
+            for (let ch = 0; ch < 2; ch++) {
+                const d = reverbBuf.getChannelData(ch);
+                for (let i = 0; i < reverbLen; i++) {
+                    const s = i / ctx.sampleRate;
+                    const early = Math.exp(-s*3.0);
+                    const late = Math.exp(-s*1.2)*0.4;
+                    d[i] = (Math.random()*2-1) * (s < 0.08 ? early : early*0.6+late);
+                }
+            }
+            window.reverbConv = ctx.createConvolver();
+            window.reverbConv.buffer = reverbBuf;
+            window.reverbConv.connect(window.masterCompressor);
+        }
+
+        function playNote(midi, duration = 0.8, instOverride = null) {
+            const ctx = getAudioContext();
+            const inst = instOverride || currentInstrument;
+            const roundMidi = Math.round(midi);
+            ensureMasterChain(ctx);
+            
+            if (soundfonts[inst]?.buffer) {
+                const src = ctx.createBufferSource();
+                src.buffer = soundfonts[inst].buffer;
+                src.playbackRate.value = Math.pow(2, (midi-60)/12);
+                const g = ctx.createGain();
+                g.gain.setValueAtTime(volume*0.7, ctx.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+duration+0.5);
+                src.connect(g); g.connect(window.masterCompressor);
+                src.start(); src.stop(ctx.currentTime+duration+1);
+            } else if (wafPlayer && wafInstruments[inst]) {
+                const microOff = (midi - roundMidi) * 100;
+                const wg = ctx.createGain(); wg.gain.value = 0.8;
+                wg.connect(window.masterCompressor);
+                const env = wafPlayer.queueWaveTable(ctx, wg, wafInstruments[inst], 0, roundMidi, duration*1.3, volume*0.7);
+                if (env?.audioBufferSourceNode) {
+                    try {
+                        const sg = ctx.createGain(); sg.gain.value = 0.35;
+                        env.audioBufferSourceNode.connect(sg); sg.connect(window.reverbConv);
+                    } catch(e) {}
+                    if (microOff !== 0) env.audioBufferSourceNode.detune.value = microOff;
+                }
+            } else {
+                playBeautifulSynth(midi, duration, inst);
+            }
+            highlightKey(roundMidi, duration);
+        }
+
+        function playBeautifulSynth(midi, duration, inst) {
+            const ctx = getAudioContext();
+            const freq = 440 * Math.pow(2, (midi-69)/12);
+            const t = ctx.currentTime;
+            ensureMasterChain(ctx);
+            const dry = ctx.createGain();
+            const wet = ctx.createGain();
+            dry.connect(window.masterCompressor);
+            wet.connect(window.reverbConv);
+
+            if (inst === 'flute') {
+                dry.gain.value = 0.55; wet.gain.value = 0.45;
+                const osc = ctx.createOscillator(); osc.type = 'sine'; osc.frequency.value = freq;
+                const osc2 = ctx.createOscillator(); osc2.type = 'sine'; osc2.frequency.value = freq*2;
+                const vib = ctx.createOscillator(); vib.type = 'sine'; vib.frequency.value = 5;
+                const vibG = ctx.createGain();
+                vibG.gain.setValueAtTime(0.5,t); vibG.gain.linearRampToValueAtTime(4,t+duration*0.4);
+                vib.connect(vibG); vibG.connect(osc.frequency); vibG.connect(osc2.frequency);
+                const g = ctx.createGain(); const a = volume*0.16;
+                g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.1);
+                g.gain.linearRampToValueAtTime(a*0.85,t+duration*0.8);
+                g.gain.exponentialRampToValueAtTime(0.001,t+duration+0.4);
+                const g2 = ctx.createGain();
+                g2.gain.setValueAtTime(0,t); g2.gain.linearRampToValueAtTime(a*0.08,t+0.15);
+                g2.gain.exponentialRampToValueAtTime(0.001,t+duration+0.3);
+                osc.connect(g); osc2.connect(g2);
+                [g,g2].forEach(x => { x.connect(dry); x.connect(wet); });
+                [osc,osc2,vib].forEach(n => { n.start(t); n.stop(t+duration+0.7); });
+            } else if (inst === 'violin') {
+                dry.gain.value = 0.55; wet.gain.value = 0.45;
+                const osc = ctx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.value = freq;
+                const osc2 = ctx.createOscillator(); osc2.type = 'sawtooth'; osc2.frequency.value = freq; osc2.detune.value = 3;
+                const vib = ctx.createOscillator(); vib.type = 'sine'; vib.frequency.value = 5;
+                const vibG = ctx.createGain();
+                vibG.gain.setValueAtTime(0,t); vibG.gain.linearRampToValueAtTime(6,t+duration*0.5);
+                vib.connect(vibG); vibG.connect(osc.frequency); vibG.connect(osc2.frequency);
+                const filt = ctx.createBiquadFilter(); filt.type = 'lowpass';
+                filt.frequency.setValueAtTime(600,t); filt.frequency.linearRampToValueAtTime(Math.min(freq*6,5500),t+0.2);
+                const g = ctx.createGain(); const a = volume*0.08;
+                g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.25);
+                g.gain.linearRampToValueAtTime(a*0.3,t+duration);
+                g.gain.exponentialRampToValueAtTime(0.001,t+duration+0.4);
+                osc.connect(filt); osc2.connect(filt); filt.connect(g);
+                g.connect(dry); g.connect(wet);
+                [osc,osc2,vib].forEach(n => { n.start(t); n.stop(t+duration+0.7); });
+            } else if (inst === 'harp') {
+                dry.gain.value = 0.5; wet.gain.value = 0.5;
+                [1,2,3,4,5].forEach((h,i) => {
+                    if (freq*h > 8000) return;
+                    const osc = ctx.createOscillator(); osc.type = i===0?'triangle':'sine'; osc.frequency.value = freq*h;
+                    const g = ctx.createGain(); const a = [1,0.6,0.3,0.15,0.08][i]*volume*0.13;
+                    const dt = (duration+2)/(1+i*0.4);
+                    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.004);
+                    g.gain.exponentialRampToValueAtTime(0.001,t+dt);
+                    osc.connect(g); g.connect(dry); g.connect(wet);
+                    osc.start(t); osc.stop(t+dt+0.3);
+                });
+            } else if (inst === 'cymbals') {
+                dry.gain.value = 0.65; wet.gain.value = 0.35;
+                const nb = ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate);
+                const nd = nb.getChannelData(0); for(let i=0;i<nd.length;i++) nd[i]=Math.random()*2-1;
+                const n = ctx.createBufferSource(); n.buffer = nb;
+                const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=3000;
+                const g = ctx.createGain(); g.gain.setValueAtTime(volume*0.08,t);
+                g.gain.exponentialRampToValueAtTime(0.001,t+duration+2);
+                n.connect(hp); hp.connect(g); g.connect(dry); g.connect(wet);
+                n.start(t); n.stop(t+duration+2.5);
+            } else if (inst === 'strings') {
+                dry.gain.value = 0.5; wet.gain.value = 0.5;
+                [-8,-4,0,4,8].forEach(det => {
+                    const osc = ctx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=freq; osc.detune.value=det;
+                    const filt = ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=Math.min(freq*3,3000);
+                    const g = ctx.createGain(); const a = volume*0.04/5;
+                    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.25);
+                    g.gain.exponentialRampToValueAtTime(0.001,t+duration+0.6);
+                    osc.connect(filt); filt.connect(g); g.connect(dry); g.connect(wet);
+                    osc.start(t); osc.stop(t+duration+0.9);
+                });
+            } else if (inst === 'choir') {
+                dry.gain.value = 0.4; wet.gain.value = 0.6;
+                [-7,-3,3,7].forEach(det => {
+                    const osc = ctx.createOscillator(); osc.type='sawtooth'; osc.frequency.value=freq; osc.detune.value=det;
+                    const mix = ctx.createGain();
+                    [{f:800,q:8,a:1},{f:1200,q:8,a:0.7},{f:2500,q:10,a:0.3}].forEach(fm => {
+                        const f = ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=fm.f; f.Q.value=fm.q;
+                        const fg = ctx.createGain(); fg.gain.value=fm.a*0.5;
+                        osc.connect(f); f.connect(fg); fg.connect(mix);
+                    });
+                    const g = ctx.createGain(); const a = volume*0.05/4;
+                    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.3);
+                    g.gain.exponentialRampToValueAtTime(0.001,t+duration+0.5);
+                    mix.connect(g); g.connect(dry); g.connect(wet);
+                    osc.start(t); osc.stop(t+duration+0.8);
+                });
+            } else {
+                // Piano default
+                dry.gain.value = 0.7; wet.gain.value = 0.3;
+                [1,2,3,4,5,6].forEach((h,i) => {
+                    if (freq*h > 9000) return;
+                    const osc = ctx.createOscillator(); osc.type='sine'; osc.frequency.value=freq*h;
+                    const g = ctx.createGain();
+                    const a = [1,0.5,0.22,0.1,0.05,0.02][i]*volume*0.1;
+                    const dt = (duration+1.2)/(1+i*0.3);
+                    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(a,t+0.005);
+                    g.gain.exponentialRampToValueAtTime(0.001,t+dt);
+                    osc.connect(g); g.connect(dry); g.connect(wet);
+                    osc.start(t); osc.stop(t+dt+0.3);
+                });
+            }
+        }
+
+        function highlightKey(midi, duration) {
+            const key = document.querySelector(`[data-midi="${midi}"]`);
+            if (key) { key.classList.add('active'); setTimeout(() => key.classList.remove('active'), duration*1000); }
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // ========================================
+        // Play Music — with Triplet + Kadma-Azla 6sec gap
+        // ========================================
+        async function playTripletSequence(parsedArray, getIsPlaying, setNowPlayingText) {
+            const currentTaamim = getCurrentTaamim();
+            const realNotes = parsedArray.filter(n => n.type === 'triplet' || n.type === 'taam_motif');
+            const totalNotes = realNotes.length;
+            let noteIndex = 0;
+            let staffNoteIdx = 0; // tracks position in staffNoteElements
+
+            for (let i = 0; i < parsedArray.length; i++) {
+                if (!getIsPlaying()) break;
+                const beatDur = 60 / tempo;
+                const item = parsedArray[i];
+
+                if (item.type === 'rest') {
+                    if (item.restType === 'verse') {
+                        setNowPlayingText('♪ ... ♪');
+                        await sleep(beatDur * 1.5 * 1000);
+                    }
+                    continue;
+                }
+
+                if (item.type === 'taam_motif') {
+                    // === Play taam melodic motif ===
+                    const motif = item.motif;
+                    const taamDisplay = item.taamName ? `(${item.taamName})` : '';
+                    const motifStr = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('-');
+                    setNowPlayingText(`♪ ${item.word} ${taamDisplay} → ${motifStr} ♪`);
+
+                    const pos = noteIndex / Math.max(totalNotes-1, 1);
+                    const dynCurve = 0.7 + 0.3 * Math.sin(pos * Math.PI);
+                    const savedVol = volume;
+                    volume = savedVol * dynCurve;
+
+                    const instruments = activeInstruments.size > 0 ? [...activeInstruments] : ['piano'];
+                    const motifDurTotal = item.duration * beatDur;
+                    const noteDur = motifDurTotal / motif.length;
+
+                    for (let mi = 0; mi < motif.length; mi++) {
+                        if (!getIsPlaying()) break;
+                        const pitch = motif[mi];
+                        highlightStaffNote(staffNoteIdx++);
+                        instruments.forEach((inst, idx) => {
+                            setTimeout(() => playNote(pitch, noteDur, inst), idx*15);
+                        });
+                        highlightKey(pitch, noteDur);
+                        await sleep(noteDur * 1000 * 0.85);
+                    }
+
+                    volume = savedVol;
+                    noteIndex++;
+
+                    // KADMA-AZLA check
+                    if (item.hasKadma) {
+                        let next = null;
+                        for (let j = i+1; j < parsedArray.length; j++) {
+                            if (parsedArray[j].type === 'taam_motif') { next = parsedArray[j]; break; }
+                            if (parsedArray[j].type === 'rest' && parsedArray[j].restType === 'verse') break;
+                        }
+                        if (next?.hasAzla) {
+                            setNowPlayingText('🌊 קדמא... 6 שניות... אזלא 🌊');
+                            await sleep(6000);
+                            if (!getIsPlaying()) break;
+                        }
+                    }
+                    continue;
+                }
+
+                if (item.type !== 'triplet') continue;
+
+                // Calculate duration from taamim
+                let noteDuration = 0.45;
+                let pitchMod = 0;
+                item.taamim.forEach(t => {
+                    if (currentTaamim[t]) {
+                        noteDuration = Math.max(noteDuration, currentTaamim[t].duration);
+                        pitchMod += (currentTaamim[t].pitch || 0);
+                    }
+                });
+
+                const taamNames = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(', ');
+                const tripletStr = `${item.before.letter}-${item.letter}-${item.after.letter}`;
+                const noteStr = `${NOTE_NAMES[item.before.note].heb}-${NOTE_NAMES[item.self.note].heb}-${NOTE_NAMES[item.after.note].heb}`;
+                const displayText = taamNames 
+                    ? `♪ [${tripletStr}] → ${noteStr} (${taamNames}) ♪`
+                    : `♪ [${tripletStr}] → ${noteStr} ♪`;
+                setNowPlayingText(displayText);
+
+                // Musical dynamics
+                const pos = noteIndex / Math.max(totalNotes-1, 1);
+                const dynCurve = 0.7 + 0.3 * Math.sin(pos * Math.PI);
+                const savedVol = volume;
+                volume = savedVol * dynCurve;
+
+                const instruments = activeInstruments.size > 0 ? [...activeInstruments] : ['piano'];
+
+                // === Play the 3-note triplet ===
+                // Before note (short, 20% of duration — the "kadma", what precedes)
+                const beforeDur = noteDuration * beatDur * 0.25;
+                const beforePitch = PHRYGISH_SCALE[item.before.note];
+                highlightStaffNote(staffNoteIdx++);
+                instruments.forEach((inst, idx) => {
+                    setTimeout(() => playNote(beforePitch + pitchMod, beforeDur, inst), idx*15);
+                });
+                await sleep(beforeDur * 1000 * 0.85);
+                if (!getIsPlaying()) break;
+
+                // Self note (main, 50% of duration — the written letter)
+                const selfDur = noteDuration * beatDur * 0.5;
+                const selfPitch = PHRYGISH_SCALE[item.self.note];
+                highlightStaffNote(staffNoteIdx++);
+                instruments.forEach((inst, idx) => {
+                    setTimeout(() => playNote(selfPitch + pitchMod, selfDur, inst), idx*15);
+                });
+                await sleep(selfDur * 1000 * 0.85);
+                if (!getIsPlaying()) break;
+
+                // After note (short, 25% — the "azla", what goes forward)
+                const afterDur = noteDuration * beatDur * 0.25;
+                const afterPitch = PHRYGISH_SCALE[item.after.note];
+                highlightStaffNote(staffNoteIdx++);
+                instruments.forEach((inst, idx) => {
+                    setTimeout(() => playNote(afterPitch + pitchMod, afterDur, inst), idx*15);
+                });
+                await sleep(afterDur * 1000 * 0.85);
+                if (!getIsPlaying()) break;
+
+                volume = savedVol;
+                noteIndex++;
+
+                // === KADMA-AZLA: 6 second gap ===
+                // If this note has kadma and the NEXT note has azla, insert 6 second pause
+                if (item.hasKadma) {
+                    // Look ahead for azla on next triplet
+                    let nextTriplet = null;
+                    for (let j = i+1; j < parsedArray.length; j++) {
+                        if (parsedArray[j].type === 'triplet') { nextTriplet = parsedArray[j]; break; }
+                        if (parsedArray[j].type === 'rest' && parsedArray[j].restType === 'verse') break;
+                    }
+                    if (nextTriplet?.hasAzla) {
+                        setNowPlayingText('🌊 קדמא... 6 שניות... אזלא 🌊');
+                        await sleep(6000); // 6 seconds — the consciousness gap
+                        if (!getIsPlaying()) break;
+                    }
+                }
+            }
+        }
+
+        async function playMusic() {
+            const text = document.getElementById('textInput').value;
+            if (!text.trim()) { alert('נא להדביק טקסט'); return; }
+            if (!parsedNotes.length) convertText();
+            stopMusic();
+            isPlaying = true;
+            document.getElementById('playBtn').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'flex';
+            document.getElementById('nowPlaying').classList.add('visible');
+
+            await playTripletSequence(
+                parsedNotes,
+                () => isPlaying,
+                txt => document.getElementById('nowPlayingText').textContent = txt
+            );
+
+            stopMusic();
+        }
+
+        function stopMusic() {
+            isPlaying = false;
+            document.getElementById('playBtn').style.display = 'flex';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('nowPlaying').classList.remove('visible');
+            document.querySelectorAll('.piano-keys .active').forEach(k => k.classList.remove('active'));
+            clearStaffHighlight();
+        }
+
+        async function playPianoOutput() {
+            if (!parsedNotes.length) convertText();
+            if (!parsedNotes.length) return;
+            isPianoPlaying = true;
+            document.getElementById('pianoPlayBtn').style.display = 'none';
+            document.getElementById('pianoStopBtn').style.display = 'block';
+            document.getElementById('nowPlaying').classList.add('visible');
+
+            await playTripletSequence(
+                parsedNotes,
+                () => isPianoPlaying,
+                txt => document.getElementById('nowPlayingText').textContent = txt
+            );
+
+            stopPianoOutput();
+        }
+
+        function stopPianoOutput() {
+            isPianoPlaying = false;
+            document.getElementById('pianoPlayBtn').style.display = 'block';
+            document.getElementById('pianoStopBtn').style.display = 'none';
+            document.getElementById('nowPlaying').classList.remove('visible');
+            document.querySelectorAll('.piano-keys .active').forEach(k => k.classList.remove('active'));
+            clearStaffHighlight();
+        }
+
+        // ========================================
+        // MIDI Download
+        // ========================================
+        function downloadMidi() {
+            if (!parsedNotes.length) convertText();
+            if (!parsedNotes.length) { alert('נא להדביק טקסט'); return; }
+            const tpb = 480, uspb = Math.round(60000000/tempo);
+            const events = []; let tick = 0;
+            const currentTaamim = getCurrentTaamim();
+
+            parsedNotes.forEach((item,i) => {
+                if (item.type === 'rest') { tick += item.restType==='verse' ? tpb*2 : Math.round(tpb*0.3); return; }
+                if (item.type !== 'triplet') return;
+                let d = 0.45, m = 0;
+                item.taamim.forEach(t => {
+                    if (currentTaamim[t]) { d = Math.max(d, currentTaamim[t].duration); m += (currentTaamim[t].pitch||0); }
+                });
+                const totalTicks = Math.round(d * tpb);
+                
+                // Before note
+                const bTicks = Math.round(totalTicks * 0.25);
+                const bPitch = Math.round(PHRYGISH_SCALE[item.before.note] + m);
+                events.push({tick, type:'on', pitch:bPitch});
+                events.push({tick:tick+bTicks, type:'off', pitch:bPitch});
+                tick += bTicks;
+                
+                // Self note
+                const sTicks = Math.round(totalTicks * 0.5);
+                const sPitch = Math.round(PHRYGISH_SCALE[item.self.note] + m);
+                events.push({tick, type:'on', pitch:sPitch});
+                events.push({tick:tick+sTicks, type:'off', pitch:sPitch});
+                tick += sTicks;
+                
+                // After note
+                const aTicks = Math.round(totalTicks * 0.25);
+                const aPitch = Math.round(PHRYGISH_SCALE[item.after.note] + m);
+                events.push({tick, type:'on', pitch:aPitch});
+                events.push({tick:tick+aTicks, type:'off', pitch:aPitch});
+                tick += aTicks;
+
+                // Kadma-azla gap
+                if (item.hasKadma) {
+                    let next = null;
+                    for (let j = i+1; j < parsedNotes.length; j++) {
+                        if (parsedNotes[j].type === 'triplet') { next = parsedNotes[j]; break; }
+                        if (parsedNotes[j].type === 'rest' && parsedNotes[j].restType === 'verse') break;
+                    }
+                    if (next?.hasAzla) tick += Math.round(6 * (tpb * tempo / 60));
+                }
+            });
+
+            const header = [0x4D,0x54,0x68,0x64,0,0,0,6,0,0,0,1,(tpb>>8)&0xFF,tpb&0xFF];
+            const track = [0,0xFF,0x51,3,(uspb>>16)&0xFF,(uspb>>8)&0xFF,uspb&0xFF];
+            events.sort((a,b) => a.tick-b.tick);
+            let last = 0;
+            events.forEach(e => {
+                const d = e.tick-last; last = e.tick;
+                track.push(...varLen(d), e.type==='on'?0x90:0x80, e.pitch, e.type==='on'?100:0);
+            });
+            track.push(0,0xFF,0x2F,0);
+            const th = [0x4D,0x54,0x72,0x6B,(track.length>>24)&0xFF,(track.length>>16)&0xFF,(track.length>>8)&0xFF,track.length&0xFF];
+            const midi = new Uint8Array([...header,...th,...track]);
+            const blob = new Blob([midi],{type:'audio/midi'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob); link.download = 'nigun_hatorah_triplet.mid';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const s = document.getElementById('sfStatus'); if(s) s.textContent = '✓ MIDI נשמר!';
+        }
+
+        function varLen(v) { const b=[v&0x7F]; v>>=7; while(v>0){b.unshift((v&0x7F)|0x80); v>>=7;} return b; }
+
+        // ========================================
+        // MusicXML Download — 6 instruments for MuseScore
+        // Piano, Nevel (Harp), Kinor (Violin), Metziltayim (Cymbals), Chalil (Flute), Slow Strings
+        // ========================================
+        function downloadMusicXML() {
+            if (!parsedNotes.length) convertText();
+            if (!parsedNotes.length) { alert('נא להדביק טקסט'); return; }
+            const div = 4;
+            const currentTaamim = getCurrentTaamim();
+            let allNotes = [];
+            
+            parsedNotes.forEach((item,i) => {
+                if (item.type === 'rest') {
+                    allNotes.push({type:'rest', duration: item.restType==='verse' ? div*2 : div});
+                } else if (item.type === 'triplet') {
+                    let d = div, m = 0;
+                    let taamName = '', taamLevel = -1, taamType = '';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t]) {
+                            d = Math.max(d, Math.round(currentTaamim[t].duration * div));
+                            m += (currentTaamim[t].pitch || 0);
+                            taamName = currentTaamim[t].name;
+                            taamLevel = currentTaamim[t].level;
+                            taamType = currentTaamim[t].type;
+                        }
+                    });
+                    const bDur = Math.max(1, Math.round(d*0.25));
+                    const sDur = Math.max(1, Math.round(d*0.5));
+                    const aDur = Math.max(1, Math.round(d*0.25));
+
+                    allNotes.push({type:'note', pitch: Math.round(PHRYGISH_SCALE[item.before.note]+m), duration:bDur, letter:item.before.letter});
+                    allNotes.push({type:'note', pitch: Math.round(PHRYGISH_SCALE[item.self.note]+m), duration:sDur, letter:item.letter,
+                        taamName, taamLevel, taamType});
+                    allNotes.push({type:'note', pitch: Math.round(PHRYGISH_SCALE[item.after.note]+m), duration:aDur, letter:item.after.letter});
+                    
+                    if (item.hasKadma) {
+                        let next = null;
+                        for (let j=i+1;j<parsedNotes.length;j++) {
+                            if (parsedNotes[j].type==='triplet'){next=parsedNotes[j];break;}
+                            if (parsedNotes[j].type==='rest'&&parsedNotes[j].restType==='verse') break;
+                        }
+                        if (next?.hasAzla) allNotes.push({type:'rest', duration:div*6});
+                    }
+                }
+            });
+
+            let measures = []; let cm = []; let cd = 0;
+            allNotes.forEach(n => { cm.push(n); cd+=n.duration; if(cd>=div*4){measures.push(cm);cm=[];cd=0;} });
+            if(cm.length) measures.push(cm);
+            if(!measures.length) measures.push([{type:'rest',duration:div*4}]);
+
+            function m2n(m){const nn=['C','C','D','D','E','F','F','G','G','A','A','B'];const sh=[0,1,0,1,0,0,1,0,1,0,1,0];return{step:nn[m%12],octave:Math.floor(m/12)-1,alter:sh[m%12]};}
+            function gt(d){if(d<=1)return'16th';if(d<=2)return'eighth';if(d<=4)return'quarter';if(d<=8)return'half';return'whole';}
+
+            function taamDynamic(level) {
+                if (level === 1) return 'ff';
+                if (level === 2) return 'f';
+                if (level === 3) return 'mf';
+                if (level === 4) return 'mp';
+                if (level === 0) return 'p';
+                return '';
+            }
+
+            // === 6 instruments ===
+            const instruments = [
+                { id:'P1', name:'פסנתר', nameEn:'Piano', midi:1, channel:0 },
+                { id:'P2', name:'נבל', nameEn:'Harp', midi:47, channel:1 },
+                { id:'P3', name:'כינור', nameEn:'Violin', midi:41, channel:2 },
+                { id:'P4', name:'מיתרים', nameEn:'Slow Strings', midi:50, channel:3 },
+                { id:'P5', name:'חליל', nameEn:'Flute', midi:74, channel:4 },
+                { id:'P6', name:'מצילתיים', nameEn:'Cymbals', midi:120, channel:9 }
+            ];
+
+            // Part list
+            let partList = '';
+            instruments.forEach(inst => {
+                partList += `\n    <score-part id="${inst.id}">
+      <part-name>${inst.name} (${inst.nameEn})</part-name>
+      <score-instrument id="${inst.id}-I1"><instrument-name>${inst.nameEn}</instrument-name></score-instrument>
+      <midi-instrument id="${inst.id}-I1"><midi-channel>${inst.channel+1}</midi-channel><midi-program>${inst.midi}</midi-program><volume>80</volume></midi-instrument>
+    </score-part>`;
+            });
+
+            // Generate measures for each part
+            function generatePart(inst, octaveShift) {
+                let mx = '';
+                measures.forEach((m, mi) => {
+                    mx += `\n    <measure number="${mi+1}">`;
+                    if (mi === 0) {
+                        mx += `\n      <attributes><divisions>${div}</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time><clef><sign>G</sign><line>2</line></clef></attributes>`;
+                        if (inst.id === 'P1') {
+                            mx += `\n      <direction placement="above"><direction-type><words default-y="30" font-size="14" font-weight="bold">ניגון התורה — סולם פרייג׳יש (אהבה רבה)</words></direction-type><sound tempo="58"/></direction>`;
+                        }
+                    }
+                    m.forEach(n => {
+                        if (n.type === 'rest') {
+                            mx += `\n      <note><rest/><duration>${n.duration}</duration><voice>1</voice><type>${gt(n.duration)}</type></note>`;
+                        } else {
+                            const shifted = n.pitch + octaveShift;
+                            const {step, octave, alter} = m2n(shifted);
+                            let notations = '';
+                            let directions = '';
+
+                            // Only piano gets taam annotations
+                            if (n.taamName && inst.id === 'P1') {
+                                directions += `\n      <direction placement="above"><direction-type><words default-y="20" font-size="9" color="#C06080">${n.taamName}</words></direction-type></direction>`;
+                                const dyn = taamDynamic(n.taamLevel);
+                                if (dyn) {
+                                    directions += `\n      <direction placement="below"><direction-type><dynamics><${dyn}/></dynamics></direction-type><sound dynamics="${n.taamLevel <= 1 ? 110 : n.taamLevel <= 2 ? 90 : n.taamLevel <= 3 ? 70 : 50}"/></direction>`;
+                                }
+                                if (n.taamType === 'disjunctive' && n.taamLevel <= 2) {
+                                    notations = '<notations><fermata type="upright"/></notations>';
+                                } else if (n.taamType === 'disjunctive' && n.taamLevel <= 3) {
+                                    notations = '<notations><articulations><tenuto/></articulations></notations>';
+                                } else if (n.taamType === 'conjunctive') {
+                                    notations = '<notations><articulations><staccato/></articulations></notations>';
+                                }
+                            }
+
+                            // Cymbals: play only on disjunctive taamim
+                            if (inst.id === 'P6' && !n.taamName) {
+                                mx += `\n      <note><rest/><duration>${n.duration}</duration><voice>1</voice><type>${gt(n.duration)}</type></note>`;
+                            } else {
+                                mx += directions;
+                                mx += `\n      <note><pitch><step>${step}</step>${alter?`<alter>${alter}</alter>`:''}<octave>${octave}</octave></pitch><duration>${n.duration}</duration><voice>1</voice><type>${gt(n.duration)}</type>${notations}`;
+                                if (inst.id === 'P1') mx += `<lyric number="1"><syllabic>single</syllabic><text>${n.letter}</text></lyric>`;
+                                mx += `</note>`;
+                            }
+                        }
+                    });
+                    mx += `\n    </measure>`;
+                });
+                return mx;
+            }
+
+            // Octave shifts per instrument
+            const shifts = { P1:0, P2:0, P3:12, P4:-12, P5:12, P6:0 };
+
+            let parts = '';
+            instruments.forEach(inst => {
+                parts += `\n  <part id="${inst.id}">${generatePart(inst, shifts[inst.id])}\n  </part>`;
+            });
+
+            const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 3.1 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise version="3.1">
+  <work><work-title>ניגון התורה - שלשות אותיות</work-title></work>
+  <identification><creator type="composer">ניגון התורה</creator></identification>
+  <part-list>${partList}
+  </part-list>${parts}
+</score-partwise>`;
+
+            const blob = new Blob([xml], {type:'application/xml'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob); link.download = 'nigun_hatorah_orchestra.musicxml';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const s = document.getElementById('sfStatus'); if(s) s.textContent = '✓ MusicXML נשמר עם 6 כלים!';
+        }
+
+        // ========================================
+        // DOCX Download
+        // ========================================
+        function downloadDocx() {
+            if (!parsedNotes.length) convertText();
+            if (!parsedNotes.length) { alert('נא להדביק טקסט'); return; }
+            const currentTaamim = getCurrentTaamim();
+            let rows = '';
+            let line = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (line.length) {
+                        rows += '<tr>' + line.map(n => `<td style="text-align:center;padding:5px;border:1px solid #ccc;">
+                            <div style="font-size:11pt;color:#999;">${n.before}</div>
+                            <div style="font-size:14pt;font-weight:bold;">${n.letter}</div>
+                            <div style="font-size:11pt;color:#999;">${n.after}</div>
+                            <div style="font-size:12pt;color:#c06;">${n.notes}</div>
+                            ${n.taam ? `<div style="font-size:9pt;color:#666;">${n.taam}</div>` : ''}
+                        </td>`).join('') + '</tr>';
+                        line = [];
+                    }
+                } else if (item.type === 'triplet') {
+                    const taam = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(', ');
+                    line.push({
+                        before: item.before.letter,
+                        letter: item.letter,
+                        after: item.after.letter,
+                        notes: `${NOTE_NAMES[item.before.note].eng}-${NOTE_NAMES[item.self.note].eng}-${NOTE_NAMES[item.after.note].eng}`,
+                        taam: taam
+                    });
+                }
+            });
+            if (line.length) {
+                rows += '<tr>' + line.map(n => `<td style="text-align:center;padding:5px;border:1px solid #ccc;">
+                    <div style="font-size:11pt;color:#999;">${n.before}</div>
+                    <div style="font-size:14pt;font-weight:bold;">${n.letter}</div>
+                    <div style="font-size:11pt;color:#999;">${n.after}</div>
+                    <div style="font-size:12pt;color:#c06;">${n.notes}</div>
+                    ${n.taam ? `<div style="font-size:9pt;color:#666;">${n.taam}</div>` : ''}
+                </td>`).join('') + '</tr>';
+            }
+            
+            const html = `<!DOCTYPE html><html dir="rtl" lang="he"><head><meta charset="UTF-8">
+<style>body{font-family:'David',serif;font-size:16pt;direction:rtl;}table{border-collapse:collapse;width:100%;margin:20px 0;}h1,h2{text-align:center;}</style>
+</head><body>
+<h1>בס"ד</h1>
+<h1>ניגון התורה — שלשות אותיות</h1>
+<h2>סולם פרייג'יש (אהבה רבה)</h2>
+<h3>אות לפני · אות כתובה · אות אחרי</h3>
+<hr><table>${rows}</table>
+<p style="font-size:12pt;color:#666;"><b>מקרא:</b> C=דו D=רה E=מי F=פה G=סול A=לה B=סי</p>
+</body></html>`;
+
+            const blob = new Blob([html],{type:'application/msword'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob); link.download = 'nigun_hatorah_triplet.doc';
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const s = document.getElementById('sfStatus'); if(s) s.textContent = '✓ DOC נשמר!';
+        }
+    </script>
+</body>
+</html>
