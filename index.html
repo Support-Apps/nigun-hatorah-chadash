@@ -480,7 +480,7 @@
                         <div class="output-content ltr" id="englishOutput"></div>
                     </div>
                     <div class="output-box" style="grid-column: 1 / -1;">
-                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
+                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(אות קטנה=לבן | גדולה=שחור | רווחים=טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="vpianoOutput"></div>
                     </div>
                 </div>
@@ -496,7 +496,7 @@
                         <div class="output-content ltr" id="sentenceEngOutput" style="max-height:400px;"></div>
                     </div>
                     <div class="output-box">
-                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
+                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(קטנה=לבן | גדולה=שחור)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceVPianoOutput" style="max-height:400px;"></div>
                     </div>
                 </div>
@@ -641,29 +641,29 @@
                 <h4>📖 מיפוי שלשות: אות לפני → אות כתובה → אות אחרי</h4>
                 <p style="margin-bottom: 6px;">כל אות בטקסט מנגנת <b>3 תווים</b> — האות שלפניה, היא עצמה, והאות שאחריה (ע"פ סדר א"ב)</p>
                 <table class="triplet-table">
-                    <tr><th>אות כתובה</th><th>לפני</th><th>כתובה</th><th>אחרי</th><th>תווים</th></tr>
-                    <tr><td>א</td><td>א</td><td>א</td><td>ב</td><td>C-C-D</td></tr>
-                    <tr><td>ב</td><td>א</td><td>ב</td><td>ג</td><td>C-D-E</td></tr>
-                    <tr><td>ג</td><td>ב</td><td>ג</td><td>ד</td><td>D-E-F</td></tr>
-                    <tr><td>ד</td><td>ג</td><td>ד</td><td>ה</td><td>E-F-G</td></tr>
-                    <tr><td>ה</td><td>ד</td><td>ה</td><td>ו</td><td>F-G-A</td></tr>
-                    <tr><td>ו</td><td>ה</td><td>ו</td><td>ז</td><td>G-A-B</td></tr>
-                    <tr><td>ז</td><td>ו</td><td>ז</td><td>ח</td><td>A-B-C</td></tr>
-                    <tr><td>ח</td><td>ז</td><td>ח</td><td>ט</td><td>B-C-D</td></tr>
-                    <tr><td>ט</td><td>ח</td><td>ט</td><td>י</td><td>C-D-E</td></tr>
-                    <tr><td>י</td><td>ט</td><td>י</td><td>כ</td><td>D-E-F</td></tr>
-                    <tr><td>כ/ך</td><td>י</td><td>כ</td><td>ל</td><td>E-F-G</td></tr>
-                    <tr><td>ל</td><td>כ</td><td>ל</td><td>מ</td><td>F-G-A</td></tr>
-                    <tr><td>מ/ם</td><td>ל</td><td>מ</td><td>נ</td><td>G-A-B</td></tr>
-                    <tr><td>נ/ן</td><td>מ</td><td>נ</td><td>ס</td><td>A-B-C</td></tr>
-                    <tr><td>ס</td><td>נ</td><td>ס</td><td>ע</td><td>B-C-D</td></tr>
-                    <tr><td>ע</td><td>ס</td><td>ע</td><td>פ</td><td>C-D-E</td></tr>
-                    <tr><td>פ/ף</td><td>ע</td><td>פ</td><td>צ</td><td>D-E-F</td></tr>
-                    <tr><td>צ/ץ</td><td>פ</td><td>צ</td><td>ק</td><td>E-F-G</td></tr>
-                    <tr><td>ק</td><td>צ</td><td>ק</td><td>ר</td><td>F-G-A</td></tr>
-                    <tr><td>ר</td><td>ק</td><td>ר</td><td>ש</td><td>G-A-B</td></tr>
-                    <tr><td>ש</td><td>ר</td><td>ש</td><td>ת</td><td>A-B-C</td></tr>
-                    <tr><td>ת</td><td>ש</td><td>ת</td><td>א</td><td>B-C-C</td></tr>
+                    <tr><th>אות כתובה</th><th>לפני</th><th>כתובה</th><th>אחרי</th><th>תווים (קטנה-גדולה-קטנה)</th></tr>
+                    <tr><td>א</td><td>א</td><td>א</td><td>ב</td><td>c-C-d</td></tr>
+                    <tr><td>ב</td><td>א</td><td>ב</td><td>ג</td><td>c-D-e</td></tr>
+                    <tr><td>ג</td><td>ב</td><td>ג</td><td>ד</td><td>d-E-f</td></tr>
+                    <tr><td>ד</td><td>ג</td><td>ד</td><td>ה</td><td>e-F-g</td></tr>
+                    <tr><td>ה</td><td>ד</td><td>ה</td><td>ו</td><td>f-G-a</td></tr>
+                    <tr><td>ו</td><td>ה</td><td>ו</td><td>ז</td><td>g-A-b</td></tr>
+                    <tr><td>ז</td><td>ו</td><td>ז</td><td>ח</td><td>a-B-c</td></tr>
+                    <tr><td>ח</td><td>ז</td><td>ח</td><td>ט</td><td>b-C-d</td></tr>
+                    <tr><td>ט</td><td>ח</td><td>ט</td><td>י</td><td>c-D-e</td></tr>
+                    <tr><td>י</td><td>ט</td><td>י</td><td>כ</td><td>d-E-f</td></tr>
+                    <tr><td>כ/ך</td><td>י</td><td>כ</td><td>ל</td><td>e-F-g</td></tr>
+                    <tr><td>ל</td><td>כ</td><td>ל</td><td>מ</td><td>f-G-a</td></tr>
+                    <tr><td>מ/ם</td><td>ל</td><td>מ</td><td>נ</td><td>g-A-b</td></tr>
+                    <tr><td>נ/ן</td><td>מ</td><td>נ</td><td>ס</td><td>a-B-c</td></tr>
+                    <tr><td>ס</td><td>נ</td><td>ס</td><td>ע</td><td>b-C-d</td></tr>
+                    <tr><td>ע</td><td>ס</td><td>ע</td><td>פ</td><td>c-D-e</td></tr>
+                    <tr><td>פ/ף</td><td>ע</td><td>פ</td><td>צ</td><td>d-E-f</td></tr>
+                    <tr><td>צ/ץ</td><td>פ</td><td>צ</td><td>ק</td><td>e-F-g</td></tr>
+                    <tr><td>ק</td><td>צ</td><td>ק</td><td>ר</td><td>f-G-a</td></tr>
+                    <tr><td>ר</td><td>ק</td><td>ר</td><td>ש</td><td>g-A-b</td></tr>
+                    <tr><td>ש</td><td>ר</td><td>ש</td><td>ת</td><td>a-B-c</td></tr>
+                    <tr><td>ת</td><td>ש</td><td>ת</td><td>א</td><td>b-C-c</td></tr>
                 </table>
             </div>
             
@@ -1447,6 +1447,15 @@
             document.getElementById('downloadDocxBtn').addEventListener('click', downloadDocx);
 
             function copyText(text) {
+                // ניקוי: הסרת רווחים כפולים בסוף שורות ותווים מוזרים
+                const clean = text.replace(/[^\x20-\x7E\n]/g, '').replace(/ +\n/g, '\n').replace(/\n{3,}/g, '\n\n');
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(clean).catch(() => fallbackCopy(clean));
+                } else {
+                    fallbackCopy(clean);
+                }
+            }
+            function fallbackCopy(text) {
                 const ta = document.createElement('textarea');
                 ta.value = text;
                 ta.style.position = 'fixed';
@@ -1744,7 +1753,7 @@
                 } else if (item.type === 'triplet') {
                     const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
                     const taamDisplay = taamStr ? `(${taamStr})` : '';
-                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
                     
                     hebCurrent += `[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay} `;
                     engCurrent += taamDisplay ? `${notes}${taamDisplay} ` : `${notes} `;
@@ -1766,13 +1775,15 @@
             document.getElementById('englishOutput').innerText = engLines.join('\n\n');
 
             // === תצוגת פסנתר וירטואלי — רווחים לפי טעמים ===
-            // מחבר = דבוק | סגנים = רווח | משנים = רווח כפול | מלכים = רווח משולש | קיסרים = שורה חדשה
+            // לפני/אחרי = אות קטנה (קלידים לבנים) | כתובה = אות גדולה (קלידים שחורים)
             let vpResult = '';
             parsedNotes.forEach(item => {
                 if (item.type === 'rest') {
                     if (item.restType === 'verse') vpResult += '\n';
                 } else if (item.type === 'triplet') {
-                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    const before = NOTE_NAMES[item.before.note].eng.toLowerCase();
+                    const self = NOTE_NAMES[item.self.note].eng.toUpperCase();
+                    const after = NOTE_NAMES[item.after.note].eng.toLowerCase();
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1780,7 +1791,7 @@
                             mainType = currentTaamim[t].type;
                         }
                     });
-                    vpResult += notes;
+                    vpResult += before + self + after;
                     if (mainType === 'disjunctive') {
                         if (mainLevel <= 1) vpResult += '   \n';       // קיסרים — שורה חדשה
                         else if (mainLevel <= 2) vpResult += '    ';    // מלכים — 4 רווחים
@@ -1790,7 +1801,10 @@
                         vpResult += ' ';                                // מחבר — רווח אחד
                     }
                 } else if (item.type === 'taam_motif') {
-                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    const motifNotes = item.motifDegrees.map((d, mi) => {
+                        const letter = NOTES_ORDER[d % 7];
+                        return mi === 0 ? letter.toUpperCase() : letter;
+                    }).join('');
                     vpResult += motifNotes;
                     if (item.taamType === 'disjunctive') {
                         if (item.taamLevel <= 1) vpResult += '   \n';
@@ -1818,7 +1832,7 @@
                 } else if (item.type === 'triplet') {
                     const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
                     const taamDisplay = taamStr ? `(${taamStr})` : '';
-                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
                     verseHebParts.push(`[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay}`);
                     verseEngParts.push(taamDisplay ? `${notes}${taamDisplay}` : notes);
                 } else if (item.type === 'taam_motif') {
@@ -1837,13 +1851,15 @@
             document.getElementById('sentenceHebrewOutput').innerText = verseHebAll.join('\n\n');
             document.getElementById('sentenceEngOutput').innerText = verseEngAll.join('\n\n');
 
-            // === פסנתר וירטואלי לפי משפט — רווחים לפי טעמים ===
+            // === פסנתר וירטואלי לפי משפט — לפני/אחרי=קטנה, כתובה=גדולה ===
             let verseVP = '', verseVPAll = [];
             parsedNotes.forEach(item => {
                 if (item.type === 'rest' && item.restType === 'verse') {
                     if (verseVP) { verseVPAll.push(verseVP.trim()); verseVP = ''; }
                 } else if (item.type === 'triplet') {
-                    const notes = `${NOTE_NAMES[item.before.note].eng}${NOTE_NAMES[item.self.note].eng}${NOTE_NAMES[item.after.note].eng}`;
+                    const before = NOTE_NAMES[item.before.note].eng.toLowerCase();
+                    const self = NOTE_NAMES[item.self.note].eng.toUpperCase();
+                    const after = NOTE_NAMES[item.after.note].eng.toLowerCase();
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1851,7 +1867,7 @@
                             mainType = currentTaamim[t].type;
                         }
                     });
-                    verseVP += notes;
+                    verseVP += before + self + after;
                     if (mainType === 'disjunctive') {
                         if (mainLevel <= 1) verseVP += '    ';
                         else if (mainLevel <= 2) verseVP += '    ';
@@ -1861,7 +1877,10 @@
                         verseVP += ' ';
                     }
                 } else if (item.type === 'taam_motif') {
-                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('');
+                    const motifNotes = item.motifDegrees.map((d, mi) => {
+                        const letter = NOTES_ORDER[d % 7];
+                        return mi === 0 ? letter.toUpperCase() : letter;
+                    }).join('');
                     verseVP += motifNotes;
                     if (item.taamType === 'disjunctive') {
                         if (item.taamLevel <= 1) verseVP += '    ';
@@ -2520,7 +2539,7 @@
                         before: item.before.letter,
                         letter: item.letter,
                         after: item.after.letter,
-                        notes: `${NOTE_NAMES[item.before.note].eng}-${NOTE_NAMES[item.self.note].eng}-${NOTE_NAMES[item.after.note].eng}`,
+                        notes: `${NOTE_NAMES[item.before.note].eng.toLowerCase()}-${NOTE_NAMES[item.self.note].eng.toUpperCase()}-${NOTE_NAMES[item.after.note].eng.toLowerCase()}`,
                         taam: taam
                     });
                 }
