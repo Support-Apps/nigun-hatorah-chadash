@@ -480,7 +480,7 @@
                         <div class="output-content ltr" id="englishOutput"></div>
                     </div>
                     <div class="output-box" style="grid-column: 1 / -1;">
-                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(אות קטנה=לבן | גדולה=שחור | רווחים=טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
+                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(קטנה=לבן גדולה=שחור רווחים=טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="vpianoOutput"></div>
                     </div>
                 </div>
@@ -496,7 +496,7 @@
                         <div class="output-content ltr" id="sentenceEngOutput" style="max-height:400px;"></div>
                     </div>
                     <div class="output-box">
-                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(קטנה=לבן | גדולה=שחור)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
+                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceVPianoOutput" style="max-height:400px;"></div>
                     </div>
                 </div>
@@ -806,10 +806,18 @@
             72:'s', 73:'S', 74:'d', 75:'D', 76:'f', 77:'g', 78:'G', 79:'h', 80:'H', 81:'j', 82:'J', 83:'k'
         };
 
-        // מיפוי ישיר מתו בסולם פרייג'יש למקש (אוקטבה 5 — מרכז הפסנתר)
-        // C=t  D♭=T  E=u  F=i  G=o  A♭=O  B=a
+        // מיפוי לפסנתר וירטואלי (virtualpiano.net) — אוקטבה 5
+        // אות קטנה = קליד לבן | אות גדולה = קליד שחור (דיאז)
+        // סולם פרייג'יש: C, D♭, E, F, G, A♭, B♭
+        //   C=t(לבן) D♭=T(שחור) E=u(לבן) F=i(לבן) G=o(לבן) A♭=O(שחור) B♭=P(שחור)
         const VPIANO_KEYS = {
-            'c': 't', 'd': 'T', 'e': 'u', 'f': 'i', 'g': 'o', 'a': 'O', 'b': 'a'
+            'c': 't',   // C  — לבן
+            'd': 'T',   // D♭ — שחור
+            'e': 'u',   // E  — לבן
+            'f': 'i',   // F  — לבן
+            'g': 'o',   // G  — לבן
+            'a': 'O',   // A♭ — שחור
+            'b': 'P'    // B♭ — שחור
         };
 
         // ========================================
@@ -1781,16 +1789,13 @@
             document.getElementById('hebrewOutput').innerText = hebLines.join('\n\n');
             document.getElementById('englishOutput').innerText = engLines.join('\n\n');
 
-            // === תצוגת פסנתר וירטואלי — רווחים לפי טעמים ===
-            // לפני/אחרי = אות קטנה (קלידים לבנים) | כתובה = אות גדולה (קלידים שחורים)
+            // === תצוגת פסנתר וירטואלי — מקשי פסנתר אמיתיים + רווחים לפי טעמים ===
             let vpResult = '';
             parsedNotes.forEach(item => {
                 if (item.type === 'rest') {
                     if (item.restType === 'verse') vpResult += '\n';
                 } else if (item.type === 'triplet') {
-                    const before = NOTE_NAMES[item.before.note].eng.toLowerCase();
-                    const self = NOTE_NAMES[item.self.note].eng.toUpperCase();
-                    const after = NOTE_NAMES[item.after.note].eng.toLowerCase();
+                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1798,21 +1803,22 @@
                             mainType = currentTaamim[t].type;
                         }
                     });
-                    vpResult += before + self + after;
+                    vpResult += notes;
                     if (mainType === 'disjunctive') {
-                        if (mainLevel <= 1) vpResult += '   \n';       // קיסרים — שורה חדשה
-                        else if (mainLevel <= 2) vpResult += '    ';    // מלכים — 4 רווחים
-                        else if (mainLevel <= 3) vpResult += '   ';     // משנים — 3 רווחים
-                        else vpResult += '  ';                          // סגנים — 2 רווחים
+                        if (mainLevel <= 1) vpResult += '   \n';
+                        else if (mainLevel <= 2) vpResult += '    ';
+                        else if (mainLevel <= 3) vpResult += '   ';
+                        else vpResult += '  ';
                     } else {
-                        vpResult += ' ';                                // מחבר — רווח אחד
+                        vpResult += ' ';
                     }
                 } else if (item.type === 'taam_motif') {
-                    const motifNotes = item.motifDegrees.map((d, mi) => {
+                    const motifKeys = item.motifDegrees.map((d, mi) => {
                         const letter = NOTES_ORDER[d % 7];
                         return mi === 0 ? letter.toUpperCase() : letter;
                     }).join('');
-                    vpResult += motifNotes;
+
+                    vpResult += motifKeys;
                     if (item.taamType === 'disjunctive') {
                         if (item.taamLevel <= 1) vpResult += '   \n';
                         else if (item.taamLevel <= 2) vpResult += '    ';
@@ -1824,7 +1830,6 @@
                 }
             });
             document.getElementById('vpianoOutput').innerText = vpResult.trim();
-
             // === תצוגה לפי משפט (פסוק) ===
             let verseHebParts = [], verseEngParts = [];
             let verseHebAll = [], verseEngAll = [];
@@ -1858,15 +1863,13 @@
             document.getElementById('sentenceHebrewOutput').innerText = verseHebAll.join('\n\n');
             document.getElementById('sentenceEngOutput').innerText = verseEngAll.join('\n\n');
 
-            // === פסנתר וירטואלי לפי משפט — לפני/אחרי=קטנה, כתובה=גדולה ===
+            // === פסנתר וירטואלי לפי משפט — מקשי פסנתר אמיתיים ===
             let verseVP = '', verseVPAll = [];
             parsedNotes.forEach(item => {
                 if (item.type === 'rest' && item.restType === 'verse') {
                     if (verseVP) { verseVPAll.push(verseVP.trim()); verseVP = ''; }
                 } else if (item.type === 'triplet') {
-                    const before = NOTE_NAMES[item.before.note].eng.toLowerCase();
-                    const self = NOTE_NAMES[item.self.note].eng.toUpperCase();
-                    const after = NOTE_NAMES[item.after.note].eng.toLowerCase();
+                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1874,7 +1877,7 @@
                             mainType = currentTaamim[t].type;
                         }
                     });
-                    verseVP += before + self + after;
+                    verseVP += notes;
                     if (mainType === 'disjunctive') {
                         if (mainLevel <= 1) verseVP += '    ';
                         else if (mainLevel <= 2) verseVP += '    ';
@@ -1884,11 +1887,11 @@
                         verseVP += ' ';
                     }
                 } else if (item.type === 'taam_motif') {
-                    const motifNotes = item.motifDegrees.map((d, mi) => {
+                    const motifKeys = item.motifDegrees.map((d, mi) => {
                         const letter = NOTES_ORDER[d % 7];
                         return mi === 0 ? letter.toUpperCase() : letter;
                     }).join('');
-                    verseVP += motifNotes;
+                    verseVP += motifKeys;
                     if (item.taamType === 'disjunctive') {
                         if (item.taamLevel <= 1) verseVP += '    ';
                         else if (item.taamLevel <= 2) verseVP += '    ';
@@ -1901,7 +1904,6 @@
             });
             if (verseVP) verseVPAll.push(verseVP.trim());
             document.getElementById('sentenceVPianoOutput').innerText = verseVPAll.join('\n\n');
-
             document.getElementById('outputContainer').style.display = 'grid';
             renderStaff();
         }
