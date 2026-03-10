@@ -484,8 +484,16 @@
                         <div class="output-content ltr" id="vpianoOutput"></div>
                     </div>
                     <div class="output-box" style="grid-column: 1 / -1;">
-                        <h4>🎹 Virtual Piano <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(virtualpiano.net)</span> <button class="copy-btn" id="copyRealVPBtn">העתק</button></h4>
+                        <h4>📋 כתובה בלבד <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(רק האות האמצעית)</span> <button class="copy-btn" id="copyMiddleOnlyBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="middleOnlyOutput"></div>
+                    </div>
+                    <div class="output-box" style="grid-column: 1 / -1;">
+                        <h4>🎹 VP — לפי מיפוי שלי <span style="font-size:0.55rem; font-weight:normal; color:var(--pink-text);">(לפני=לבן כתובה=שחור אחרי=לבן)</span> <button class="copy-btn" id="copyRealVPBtn">העתק</button></h4>
                         <div class="output-content ltr" id="realVPOutput"></div>
+                    </div>
+                    <div class="output-box" style="grid-column: 1 / -1;">
+                        <h4>🎹 VP — לפי טבע מוזיקלי <span style="font-size:0.55rem; font-weight:normal; color:var(--pink-text);">(C,E,F,G=לבן D♭,A♭,B♭=שחור)</span> <button class="copy-btn" id="copyNaturalVPBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="naturalVPOutput"></div>
                     </div>
                 </div>
 
@@ -503,9 +511,17 @@
                         <h4>📋 מיפוי להעתקה לפי פסוק <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceVPianoOutput" style="max-height:400px;"></div>
                     </div>
+                    <div class="output-box" style="margin-bottom:15px;">
+                        <h4>📋 כתובה בלבד לפי פסוק <button class="copy-btn" id="copySentenceMiddleOnlyBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="sentenceMiddleOnlyOutput" style="max-height:400px;"></div>
+                    </div>
                     <div class="output-box">
-                        <h4>🎹 Virtual Piano לפי פסוק <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(virtualpiano.net)</span> <button class="copy-btn" id="copySentenceRealVPBtn">העתק</button></h4>
+                        <h4>🎹 VP מיפוי שלי — לפי פסוק <button class="copy-btn" id="copySentenceRealVPBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceRealVPOutput" style="max-height:400px;"></div>
+                    </div>
+                    <div class="output-box">
+                        <h4>🎹 VP טבע מוזיקלי — לפי פסוק <button class="copy-btn" id="copySentenceNaturalVPBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="sentenceNaturalVPOutput" style="max-height:400px;"></div>
                     </div>
                 </div>
             </div>
@@ -835,6 +851,10 @@
             'c6': { heb: 'דו₆', eng: 'C6' }
         };
 
+        // פונקציית עזר — אות בלי מספר אוקטבה
+        function noteEng(note) { return NOTE_NAMES[note]?.eng?.replace(/\d/g, '') || '?'; }
+        function noteHeb(note) { return NOTE_NAMES[note]?.heb?.replace(/[₃₄₅₆]/g, '') || '?'; }
+
         // מיפוי לפסנתר וירטואלי (virtualpiano.net)
         // המקשים ממופים לפי מקלדת:
         // אוקטבה 3: 1=C 2=D 3=E 4=F 5=G 6=A 7=B | שחורים: !=C# @=D# $=F# %=G# ^=A#
@@ -850,8 +870,10 @@
 
         // מיפוי לפסנתר וירטואלי — הכל קלידים לבנים (אותיות קטנות)
         // סולם פרייג'יש ממופה ל-7 קלידים לבנים רצופים
-        const VPIANO_KEYS = {
-            // אוקטבה 3 — א-ז
+        // מיפוי לפסנתר וירטואלי — לפי מיקום בשלשה
+        // לפני/אחרי = קליד לבן | כתובה = קליד שחור
+        const VPIANO_WHITE = {
+            // אוקטבה 3 — א-ז → קלידים לבנים
             'c3': '1', 'd3': '2', 'e3': '3', 'f3': '4', 'g3': '5', 'a3': '6', 'b3': '7',
             // אוקטבה 4 — ח-נ
             'c4': '8', 'd4': '9', 'e4': '0', 'f4': 'q', 'g4': 'w', 'a4': 'e', 'b4': 'r',
@@ -860,7 +882,26 @@
             // ת
             'c6': 's'
         };
+        const VPIANO_BLACK = {
+            // אוקטבה 3 — א-ז → קלידים שחורים (# של הלבן)
+            'c3': '!', 'd3': '!', 'e3': '@', 'f3': '$', 'g3': '%', 'a3': '%', 'b3': '^',
+            // אוקטבה 4 — ח-נ
+            'c4': '*', 'd4': '*', 'e4': '(', 'f4': 'Q', 'g4': 'W', 'a4': 'W', 'b4': 'E',
+            // אוקטבה 5 — ס-ש
+            'c5': 'T', 'd5': 'T', 'e5': 'Y', 'f5': 'I', 'g5': 'O', 'a5': 'O', 'b5': 'P',
+            // ת
+            'c6': 'S'
+        };
+        // שמירה לתאימות אחורה
+        const VPIANO_KEYS = VPIANO_WHITE;
 
+        // מיפוי לפי טבע מוזיקלי — C,E,F,G=לבן | D♭,A♭,B♭=שחור
+        const VPIANO_NATURAL = {
+            'c3': '1', 'd3': '!', 'e3': '3', 'f3': '4', 'g3': '5', 'a3': '%', 'b3': '^',
+            'c4': '8', 'd4': '*', 'e4': '0', 'f4': 'q', 'g4': 'w', 'a4': 'W', 'b4': 'E',
+            'c5': 't', 'd5': 'T', 'e5': 'u', 'f5': 'i', 'g5': 'o', 'a5': 'O', 'b5': 'P',
+            'c6': 's'
+        };
         // ========================================
         // טעמי מקרא — תורה (כ"א ספרים)
         // ========================================
@@ -1549,6 +1590,14 @@
                 copyText(document.getElementById('sentenceVPianoOutput').innerText);
                 flashBtn(document.getElementById('copySentenceVPianoBtn'), '✓ הועתק!', 'העתק');
             });
+            document.getElementById('copyMiddleOnlyBtn').addEventListener('click', () => {
+                copyText(document.getElementById('middleOnlyOutput').innerText);
+                flashBtn(document.getElementById('copyMiddleOnlyBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceMiddleOnlyBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceMiddleOnlyOutput').innerText);
+                flashBtn(document.getElementById('copySentenceMiddleOnlyBtn'), '✓ הועתק!', 'העתק');
+            });
             document.getElementById('copyRealVPBtn').addEventListener('click', () => {
                 copyText(document.getElementById('realVPOutput').innerText);
                 flashBtn(document.getElementById('copyRealVPBtn'), '✓ הועתק!', 'העתק');
@@ -1556,6 +1605,14 @@
             document.getElementById('copySentenceRealVPBtn').addEventListener('click', () => {
                 copyText(document.getElementById('sentenceRealVPOutput').innerText);
                 flashBtn(document.getElementById('copySentenceRealVPBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copyNaturalVPBtn').addEventListener('click', () => {
+                copyText(document.getElementById('naturalVPOutput').innerText);
+                flashBtn(document.getElementById('copyNaturalVPBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceNaturalVPBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceNaturalVPOutput').innerText);
+                flashBtn(document.getElementById('copySentenceNaturalVPBtn'), '✓ הועתק!', 'העתק');
             });
 
             document.getElementById('pianoPlayBtn').addEventListener('click', playPianoOutput);
@@ -1817,7 +1874,7 @@
                 } else if (item.type === 'triplet') {
                     const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
                     const taamDisplay = taamStr ? `(${taamStr})` : '';
-                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
+                    const notes = `${noteEng(item.before.note).toLowerCase()}${noteEng(item.self.note).toUpperCase()}${noteEng(item.after.note).toLowerCase()}`;
                     
                     hebCurrent += `[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay} `;
                     engCurrent += taamDisplay ? `${notes}${taamDisplay} ` : `${notes} `;
@@ -1844,7 +1901,7 @@
                 if (item.type === 'rest') {
                     if (item.restType === 'verse') vpResult += '\n';
                 } else if (item.type === 'triplet') {
-                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
+                    const notes = `${noteEng(item.before.note).toLowerCase()}${noteEng(item.self.note).toUpperCase()}${noteEng(item.after.note).toLowerCase()}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1880,13 +1937,42 @@
             });
             document.getElementById('vpianoOutput').innerText = vpResult.trim();
 
+            // === כתובה בלבד — רק האות האמצעית ===
+            let midResult = '';
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (item.restType === 'verse') midResult += '\n';
+                } else if (item.type === 'triplet') {
+                    midResult += noteEng(item.self.note);
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) midResult += '   \n';
+                        else if (mainLevel <= 2) midResult += '    ';
+                        else if (mainLevel <= 3) midResult += '   ';
+                        else midResult += '  ';
+                    } else {
+                        midResult += ' ';
+                    }
+                } else if (item.type === 'taam_motif') {
+                    midResult += item.motifDegrees.map(d => NOTES_ORDER[d % 7]).join('');
+                    midResult += ' ';
+                }
+            });
+            document.getElementById('middleOnlyOutput').innerText = midResult.trim();
+
             // === Virtual Piano (virtualpiano.net) — מקשי מקלדת אמיתיים ===
             let realVP = '';
             parsedNotes.forEach(item => {
                 if (item.type === 'rest') {
                     if (item.restType === 'verse') realVP += '\n';
                 } else if (item.type === 'triplet') {
-                    realVP += `${VPIANO_KEYS[item.before.note]}${VPIANO_KEYS[item.self.note]}${VPIANO_KEYS[item.after.note]}`;
+                    realVP += `${VPIANO_WHITE[item.before.note]}${VPIANO_BLACK[item.self.note]}${VPIANO_WHITE[item.after.note]}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1919,6 +2005,32 @@
             });
             document.getElementById('realVPOutput').innerText = realVP.trim();
 
+            // === VP טבע מוזיקלי — לפי מילה ===
+            let natVP = '';
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (item.restType === 'verse') natVP += '\n';
+                } else if (item.type === 'triplet') {
+                    natVP += `${VPIANO_NATURAL[item.before.note]}${VPIANO_NATURAL[item.self.note]}${VPIANO_NATURAL[item.after.note]}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) natVP += '   \n';
+                        else if (mainLevel <= 2) natVP += '    ';
+                        else if (mainLevel <= 3) natVP += '   ';
+                        else natVP += '  ';
+                    } else {
+                        natVP += ' ';
+                    }
+                }
+            });
+            document.getElementById('naturalVPOutput').innerText = natVP.trim();
+
             // === תצוגה לפי משפט (פסוק) ===
             let verseHebParts = [], verseEngParts = [];
             let verseHebAll = [], verseEngAll = [];
@@ -1933,7 +2045,7 @@
                 } else if (item.type === 'triplet') {
                     const taamStr = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(',');
                     const taamDisplay = taamStr ? `(${taamStr})` : '';
-                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
+                    const notes = `${noteEng(item.before.note).toLowerCase()}${noteEng(item.self.note).toUpperCase()}${noteEng(item.after.note).toLowerCase()}`;
                     verseHebParts.push(`[${item.before.letter}-${item.letter}-${item.after.letter}]${taamDisplay}`);
                     verseEngParts.push(taamDisplay ? `${notes}${taamDisplay}` : notes);
                 } else if (item.type === 'taam_motif') {
@@ -1958,7 +2070,7 @@
                 if (item.type === 'rest' && item.restType === 'verse') {
                     if (verseVP) { verseVPAll.push(verseVP.trim()); verseVP = ''; }
                 } else if (item.type === 'triplet') {
-                    const notes = `${NOTE_NAMES[item.before.note].eng.toLowerCase()}${NOTE_NAMES[item.self.note].eng.toUpperCase()}${NOTE_NAMES[item.after.note].eng.toLowerCase()}`;
+                    const notes = `${noteEng(item.before.note).toLowerCase()}${noteEng(item.self.note).toUpperCase()}${noteEng(item.after.note).toLowerCase()}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -1994,13 +2106,43 @@
             if (verseVP) verseVPAll.push(verseVP.trim());
             document.getElementById('sentenceVPianoOutput').innerText = verseVPAll.join('\n\n');
 
+            // === כתובה בלבד לפי משפט ===
+            let verseMid = '', verseMidAll = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest' && item.restType === 'verse') {
+                    if (verseMid) { verseMidAll.push(verseMid.trim()); verseMid = ''; }
+                } else if (item.type === 'triplet') {
+                    verseMid += noteEng(item.self.note);
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) verseMid += '    ';
+                        else if (mainLevel <= 2) verseMid += '    ';
+                        else if (mainLevel <= 3) verseMid += '   ';
+                        else verseMid += '  ';
+                    } else {
+                        verseMid += ' ';
+                    }
+                } else if (item.type === 'taam_motif') {
+                    verseMid += item.motifDegrees.map(d => NOTES_ORDER[d % 7]).join('');
+                    verseMid += ' ';
+                }
+            });
+            if (verseMid) verseMidAll.push(verseMid.trim());
+            document.getElementById('sentenceMiddleOnlyOutput').innerText = verseMidAll.join('\n\n');
+
             // === Virtual Piano לפי משפט — מקשי מקלדת אמיתיים ===
             let verseRealVP = '', verseRealVPAll = [];
             parsedNotes.forEach(item => {
                 if (item.type === 'rest' && item.restType === 'verse') {
                     if (verseRealVP) { verseRealVPAll.push(verseRealVP.trim()); verseRealVP = ''; }
                 } else if (item.type === 'triplet') {
-                    verseRealVP += `${VPIANO_KEYS[item.before.note]}${VPIANO_KEYS[item.self.note]}${VPIANO_KEYS[item.after.note]}`;
+                    verseRealVP += `${VPIANO_WHITE[item.before.note]}${VPIANO_BLACK[item.self.note]}${VPIANO_WHITE[item.after.note]}`;
                     let mainLevel = 0, mainType = 'conjunctive';
                     item.taamim.forEach(t => {
                         if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
@@ -2033,6 +2175,33 @@
             });
             if (verseRealVP) verseRealVPAll.push(verseRealVP.trim());
             document.getElementById('sentenceRealVPOutput').innerText = verseRealVPAll.join('\n\n');
+
+            // === VP טבע מוזיקלי לפי משפט ===
+            let verseNatVP = '', verseNatVPAll = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest' && item.restType === 'verse') {
+                    if (verseNatVP) { verseNatVPAll.push(verseNatVP.trim()); verseNatVP = ''; }
+                } else if (item.type === 'triplet') {
+                    verseNatVP += `${VPIANO_NATURAL[item.before.note]}${VPIANO_NATURAL[item.self.note]}${VPIANO_NATURAL[item.after.note]}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) verseNatVP += '    ';
+                        else if (mainLevel <= 2) verseNatVP += '    ';
+                        else if (mainLevel <= 3) verseNatVP += '   ';
+                        else verseNatVP += '  ';
+                    } else {
+                        verseNatVP += ' ';
+                    }
+                }
+            });
+            if (verseNatVP) verseNatVPAll.push(verseNatVP.trim());
+            document.getElementById('sentenceNaturalVPOutput').innerText = verseNatVPAll.join('\n\n');
 
             document.getElementById('outputContainer').style.display = 'grid';
             renderStaff();
@@ -2301,7 +2470,7 @@
 
                 const taamNames = item.taamim.map(t => currentTaamim[t]?.name).filter(Boolean).join(', ');
                 const tripletStr = `${item.before.letter}-${item.letter}-${item.after.letter}`;
-                const noteStr = `${NOTE_NAMES[item.before.note].heb}-${NOTE_NAMES[item.self.note].heb}-${NOTE_NAMES[item.after.note].heb}`;
+                const noteStr = `${noteHeb(item.before.note)}-${noteHeb(item.self.note)}-${noteHeb(item.after.note)}`;
                 const displayText = taamNames 
                     ? `♪ [${tripletStr}] → ${noteStr} (${taamNames}) ♪`
                     : `♪ [${tripletStr}] → ${noteStr} ♪`;
@@ -2742,7 +2911,7 @@
                         before: item.before.letter,
                         letter: item.letter,
                         after: item.after.letter,
-                        notes: `${NOTE_NAMES[item.before.note].eng.toLowerCase()}-${NOTE_NAMES[item.self.note].eng.toUpperCase()}-${NOTE_NAMES[item.after.note].eng.toLowerCase()}`,
+                        notes: `${noteEng(item.before.note).toLowerCase()}-${noteEng(item.self.note).toUpperCase()}-${noteEng(item.after.note).toLowerCase()}`,
                         taam: taam
                     });
                 } else if (item.type === 'taam_motif') {
