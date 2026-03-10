@@ -480,8 +480,12 @@
                         <div class="output-content ltr" id="englishOutput"></div>
                     </div>
                     <div class="output-box" style="grid-column: 1 / -1;">
-                        <h4>🎹 פסנתר וירטואלי <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(קטנה=לבן גדולה=שחור רווחים=טעמים)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
+                        <h4>📋 מיפוי להעתקה <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(קטנה=לפני גדולה=כתובה קטנה=אחרי)</span> <button class="copy-btn" id="copyVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="vpianoOutput"></div>
+                    </div>
+                    <div class="output-box" style="grid-column: 1 / -1;">
+                        <h4>🎹 Virtual Piano <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(virtualpiano.net)</span> <button class="copy-btn" id="copyRealVPBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="realVPOutput"></div>
                     </div>
                 </div>
 
@@ -495,9 +499,13 @@
                         <h4>Notes + טעמים לפי פסוק <button class="copy-btn" id="copySentenceEngBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceEngOutput" style="max-height:400px;"></div>
                     </div>
-                    <div class="output-box">
-                        <h4>🎹 פסנתר וירטואלי לפי פסוק <span style="font-size:0.65rem; font-weight:normal; color:var(--pink-text);">(רווחים = טעמים)</span> <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
+                    <div class="output-box" style="margin-bottom:15px;">
+                        <h4>📋 מיפוי להעתקה לפי פסוק <button class="copy-btn" id="copySentenceVPianoBtn">העתק</button></h4>
                         <div class="output-content ltr" id="sentenceVPianoOutput" style="max-height:400px;"></div>
+                    </div>
+                    <div class="output-box">
+                        <h4>🎹 Virtual Piano לפי פסוק <span style="font-size:0.6rem; font-weight:normal; color:var(--pink-text);">(virtualpiano.net)</span> <button class="copy-btn" id="copySentenceRealVPBtn">העתק</button></h4>
+                        <div class="output-content ltr" id="sentenceRealVPOutput" style="max-height:400px;"></div>
                     </div>
                 </div>
             </div>
@@ -1508,6 +1516,14 @@
                 copyText(document.getElementById('sentenceVPianoOutput').innerText);
                 flashBtn(document.getElementById('copySentenceVPianoBtn'), '✓ הועתק!', 'העתק');
             });
+            document.getElementById('copyRealVPBtn').addEventListener('click', () => {
+                copyText(document.getElementById('realVPOutput').innerText);
+                flashBtn(document.getElementById('copyRealVPBtn'), '✓ הועתק!', 'העתק');
+            });
+            document.getElementById('copySentenceRealVPBtn').addEventListener('click', () => {
+                copyText(document.getElementById('sentenceRealVPOutput').innerText);
+                flashBtn(document.getElementById('copySentenceRealVPBtn'), '✓ הועתק!', 'העתק');
+            });
 
             document.getElementById('pianoPlayBtn').addEventListener('click', playPianoOutput);
             document.getElementById('pianoStopBtn').addEventListener('click', stopPianoOutput);
@@ -1830,6 +1846,46 @@
                 }
             });
             document.getElementById('vpianoOutput').innerText = vpResult.trim();
+
+            // === Virtual Piano (virtualpiano.net) — מקשי מקלדת אמיתיים ===
+            let realVP = '';
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest') {
+                    if (item.restType === 'verse') realVP += '\n';
+                } else if (item.type === 'triplet') {
+                    realVP += `${VPIANO_KEYS[item.before.note]}${VPIANO_KEYS[item.self.note]}${VPIANO_KEYS[item.after.note]}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) realVP += '   \n';
+                        else if (mainLevel <= 2) realVP += '    ';
+                        else if (mainLevel <= 3) realVP += '   ';
+                        else realVP += '  ';
+                    } else {
+                        realVP += ' ';
+                    }
+                } else if (item.type === 'taam_motif') {
+                    realVP += item.motifDegrees.map(d => {
+                        const note = NOTES_ORDER[d % 7];
+                        return VPIANO_KEYS[note] || note;
+                    }).join('');
+                    if (item.taamType === 'disjunctive') {
+                        if (item.taamLevel <= 1) realVP += '   \n';
+                        else if (item.taamLevel <= 2) realVP += '    ';
+                        else if (item.taamLevel <= 3) realVP += '   ';
+                        else realVP += '  ';
+                    } else {
+                        realVP += ' ';
+                    }
+                }
+            });
+            document.getElementById('realVPOutput').innerText = realVP.trim();
+
             // === תצוגה לפי משפט (פסוק) ===
             let verseHebParts = [], verseEngParts = [];
             let verseHebAll = [], verseEngAll = [];
@@ -1904,6 +1960,47 @@
             });
             if (verseVP) verseVPAll.push(verseVP.trim());
             document.getElementById('sentenceVPianoOutput').innerText = verseVPAll.join('\n\n');
+
+            // === Virtual Piano לפי משפט — מקשי מקלדת אמיתיים ===
+            let verseRealVP = '', verseRealVPAll = [];
+            parsedNotes.forEach(item => {
+                if (item.type === 'rest' && item.restType === 'verse') {
+                    if (verseRealVP) { verseRealVPAll.push(verseRealVP.trim()); verseRealVP = ''; }
+                } else if (item.type === 'triplet') {
+                    verseRealVP += `${VPIANO_KEYS[item.before.note]}${VPIANO_KEYS[item.self.note]}${VPIANO_KEYS[item.after.note]}`;
+                    let mainLevel = 0, mainType = 'conjunctive';
+                    item.taamim.forEach(t => {
+                        if (currentTaamim[t] && currentTaamim[t].level >= mainLevel) {
+                            mainLevel = currentTaamim[t].level;
+                            mainType = currentTaamim[t].type;
+                        }
+                    });
+                    if (mainType === 'disjunctive') {
+                        if (mainLevel <= 1) verseRealVP += '    ';
+                        else if (mainLevel <= 2) verseRealVP += '    ';
+                        else if (mainLevel <= 3) verseRealVP += '   ';
+                        else verseRealVP += '  ';
+                    } else {
+                        verseRealVP += ' ';
+                    }
+                } else if (item.type === 'taam_motif') {
+                    verseRealVP += item.motifDegrees.map(d => {
+                        const note = NOTES_ORDER[d % 7];
+                        return VPIANO_KEYS[note] || note;
+                    }).join('');
+                    if (item.taamType === 'disjunctive') {
+                        if (item.taamLevel <= 1) verseRealVP += '    ';
+                        else if (item.taamLevel <= 2) verseRealVP += '    ';
+                        else if (item.taamLevel <= 3) verseRealVP += '   ';
+                        else verseRealVP += '  ';
+                    } else {
+                        verseRealVP += ' ';
+                    }
+                }
+            });
+            if (verseRealVP) verseRealVPAll.push(verseRealVP.trim());
+            document.getElementById('sentenceRealVPOutput').innerText = verseRealVPAll.join('\n\n');
+
             document.getElementById('outputContainer').style.display = 'grid';
             renderStaff();
         }
@@ -2303,31 +2400,67 @@
 
             parsedNotes.forEach((item,i) => {
                 if (item.type === 'rest') { tick += item.restType==='verse' ? tpb*2 : Math.round(tpb*0.3); return; }
+                
+                // === מצב ניגון מטעמים ===
+                if (item.type === 'taam_motif') {
+                    const totalTicks = Math.round(item.duration * tpb);
+                    const motif = item.motif;
+                    const tickPerNote = Math.round(totalTicks / motif.length);
+                    // דינמיקה לפי דרגת טעם
+                    const vel = item.taamLevel <= 1 ? 110 : item.taamLevel <= 2 ? 90 : item.taamLevel <= 3 ? 70 : 50;
+                    
+                    motif.forEach(pitch => {
+                        const p = Math.round(pitch);
+                        events.push({tick, type:'on', pitch:p, vel});
+                        events.push({tick:tick+tickPerNote, type:'off', pitch:p});
+                        tick += tickPerNote;
+                    });
+
+                    // Kadma-azla gap
+                    if (item.hasKadma) {
+                        let next = null;
+                        for (let j = i+1; j < parsedNotes.length; j++) {
+                            if (parsedNotes[j].type === 'taam_motif') { next = parsedNotes[j]; break; }
+                            if (parsedNotes[j].type === 'rest' && parsedNotes[j].restType === 'verse') break;
+                        }
+                        if (next?.hasAzla) tick += Math.round(6 * (tpb * tempo / 60));
+                    }
+                    return;
+                }
+
                 if (item.type !== 'triplet') return;
                 let d = 0.45, m = 0;
                 item.taamim.forEach(t => {
                     if (currentTaamim[t]) { d = Math.max(d, currentTaamim[t].duration); m += (currentTaamim[t].pitch||0); }
                 });
                 const totalTicks = Math.round(d * tpb);
+                // דינמיקה לפי טעם
+                let vel = 80;
+                item.taamim.forEach(t => {
+                    if (currentTaamim[t]) {
+                        const lv = currentTaamim[t].level;
+                        vel = lv <= 1 ? 110 : lv <= 2 ? 90 : lv <= 3 ? 70 : lv === 0 ? 50 : 80;
+                    }
+                });
                 
                 // Before note
                 const bTicks = Math.round(totalTicks * 0.25);
                 const bPitch = Math.round(PHRYGISH_SCALE[item.before.note] + m);
-                events.push({tick, type:'on', pitch:bPitch});
+                events.push({tick, type:'on', pitch:bPitch, vel:Math.round(vel*0.7)});
                 events.push({tick:tick+bTicks, type:'off', pitch:bPitch});
                 tick += bTicks;
                 
                 // Self note
                 const sTicks = Math.round(totalTicks * 0.5);
                 const sPitch = Math.round(PHRYGISH_SCALE[item.self.note] + m);
-                events.push({tick, type:'on', pitch:sPitch});
+                events.push({tick, type:'on', pitch:sPitch, vel});
                 events.push({tick:tick+sTicks, type:'off', pitch:sPitch});
                 tick += sTicks;
                 
                 // After note
                 const aTicks = Math.round(totalTicks * 0.25);
                 const aPitch = Math.round(PHRYGISH_SCALE[item.after.note] + m);
-                events.push({tick, type:'on', pitch:aPitch});
+                events.push({tick, type:'on', pitch:aPitch, vel:Math.round(vel*0.7)});
                 events.push({tick:tick+aTicks, type:'off', pitch:aPitch});
                 tick += aTicks;
 
@@ -2348,7 +2481,7 @@
             let last = 0;
             events.forEach(e => {
                 const d = e.tick-last; last = e.tick;
-                track.push(...varLen(d), e.type==='on'?0x90:0x80, e.pitch, e.type==='on'?100:0);
+                track.push(...varLen(d), e.type==='on'?0x90:0x80, e.pitch, e.type==='on'?(e.vel||100):0);
             });
             track.push(0,0xFF,0x2F,0);
             const th = [0x4D,0x54,0x72,0x6B,(track.length>>24)&0xFF,(track.length>>16)&0xFF,(track.length>>8)&0xFF,track.length&0xFF];
@@ -2401,6 +2534,34 @@
                         let next = null;
                         for (let j=i+1;j<parsedNotes.length;j++) {
                             if (parsedNotes[j].type==='triplet'){next=parsedNotes[j];break;}
+                            if (parsedNotes[j].type==='rest'&&parsedNotes[j].restType==='verse') break;
+                        }
+                        if (next?.hasAzla) allNotes.push({type:'rest', duration:div*6});
+                    }
+                } else if (item.type === 'taam_motif') {
+                    // === מצב ניגון מטעמים — כל מוטיב הופך לרצף תווים ===
+                    const motif = item.motif;
+                    const totalDur = Math.max(div, Math.round(item.duration * div));
+                    const noteDur = Math.max(1, Math.round(totalDur / motif.length));
+                    
+                    motif.forEach((midi, mi) => {
+                        const isFirst = mi === 0;
+                        allNotes.push({
+                            type: 'note',
+                            pitch: Math.round(midi),
+                            duration: noteDur,
+                            letter: item.letters[mi % item.letters.length] || '·',
+                            taamName: isFirst ? item.taamName : '',
+                            taamLevel: isFirst ? item.taamLevel : -1,
+                            taamType: isFirst ? item.taamType : ''
+                        });
+                    });
+
+                    // Kadma-azla gap
+                    if (item.hasKadma) {
+                        let next = null;
+                        for (let j=i+1;j<parsedNotes.length;j++) {
+                            if (parsedNotes[j].type==='taam_motif'){next=parsedNotes[j];break;}
                             if (parsedNotes[j].type==='rest'&&parsedNotes[j].restType==='verse') break;
                         }
                         if (next?.hasAzla) allNotes.push({type:'rest', duration:div*6});
@@ -2550,6 +2711,15 @@
                         after: item.after.letter,
                         notes: `${NOTE_NAMES[item.before.note].eng.toLowerCase()}-${NOTE_NAMES[item.self.note].eng.toUpperCase()}-${NOTE_NAMES[item.after.note].eng.toLowerCase()}`,
                         taam: taam
+                    });
+                } else if (item.type === 'taam_motif') {
+                    const motifNotes = item.motifDegrees.map(d => NOTES_ORDER[d % 7].toUpperCase()).join('-');
+                    line.push({
+                        before: '',
+                        letter: item.word,
+                        after: '',
+                        notes: motifNotes,
+                        taam: item.taamName
                     });
                 }
             });
